@@ -119,9 +119,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     void Update()
     {
-        // 현재 체력과 슬라이더 값을 로그로 출력
-        Debug.Log($"Current Health: {CurrentHealth}"); // player.CurrentHealth 대신 CurrentHealth 사용
-
         float moveInput = Input.GetAxisRaw("Horizontal");
         if (moveInput != 0)
         {
