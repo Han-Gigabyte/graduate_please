@@ -13,7 +13,11 @@ public class GameManager : MonoBehaviour
 
     // 프로퍼티를 통한 접근
     public int Score => score;
-    public int Stage => stage;
+    public int Stage
+    {
+        get => stage;
+        set => stage = value;
+    }
     public int Chapter => chapter;
     public bool IsPlayerInRange
     {
@@ -110,7 +114,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 플레이어 상태 저장/복원 메서드!
-    private void SavePlayerState()
+    public void SavePlayerState()
     {
         PlayerController player = FindObjectOfType<PlayerController>();
         if (player != null)
@@ -126,11 +130,11 @@ public class GameManager : MonoBehaviour
     }
 
     // 새로운 씬에서 호출될 메서드
-    public void RestorePlayerState(PlayerController player)
+    public void RestorePlayerState(IDamageable player)
     {
         if (player != null)
         {
-            player.RestoreHealth(currentPlayerHealth);
+            player.RestoreHealth(currentPlayerHealth); // 현재 체력을 복원
             Debug.Log($"Restored player health: {currentPlayerHealth}");  // 디버그용
         }
         else
@@ -188,5 +192,12 @@ public class GameManager : MonoBehaviour
             Vector3 startPosition = MapManager.Instance.GetStartPosition();
             player.transform.position = startPosition;
         }
+    }
+
+    void Start()
+    {
+        // PlayerUI 프리팹을 찾아서 인스턴스화
+        GameObject playerUI = Instantiate(playerUIPrefab);
+        playerUI.GetComponent<PlayerUI>().SetPlayer(FindObjectOfType<PlayerController>());
     }
 }
