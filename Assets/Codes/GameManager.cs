@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
         score += points;
     }
 
-    // 플레이어 상태 저장/복원 메서드
+    // 플레이어 상태 저장/복원 메서드!
     private void SavePlayerState()
     {
         PlayerController player = FindObjectOfType<PlayerController>();
