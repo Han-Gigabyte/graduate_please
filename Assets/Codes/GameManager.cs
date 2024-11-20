@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
         set => currentPlayerHealth = value;
     }
 
+    [Header("UI Prefabs")]
+    public GameObject playerUIPrefab; // PlayerUI 프리팹을 위한 변수
+
     private void Awake()
     {
         if (Instance == null)
