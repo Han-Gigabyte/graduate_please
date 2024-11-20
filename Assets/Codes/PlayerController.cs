@@ -1,102 +1,79 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
+    public float moveSpeed = 5f;
+    public float jumpForce = 9.6f;
+    private bool isGrounded;
     private SpriteRenderer spriteRenderer;
-    
+
     [Header("Ground Check")]
-    public float groundCheckDistance = 0.1f;
+    public float groundCheckDistance = 0.1f;  // 레이캐스트 거리
     public LayerMask groundLayer;
-    public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
+    public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);     // 박스캐스트 크기
     
     [Header("Jump Settings")]
-    private int remainingJumps;
-    private bool hasJumped;
-    
+    public int maxJumpCount = 2;  // 최대 점프 횟수
+    private int remainingJumps;    // 남은 점프 횟수
+    private bool hasJumped;  // 점프로 올라갔는지 여부를 체크하는 변수 추가
+
     [Header("Dash Settings")]
-    private bool canDash = true;
-    private float dashCooldownTimer = 0f;
-    private bool isDashing = false;
+    public float dashForce = 15f;        // 돌진 힘
+    public float dashCooldown = 5f;      // 쿨다운 시간
+    private bool canDash = true;         // 돌진 가능 여부
+    private float dashCooldownTimer = 0f; // 쿨다운 타이머
     
+    private bool isDashing = false;
+
+    [Header("Dash Effect")]
+    public GameObject afterImagePrefab;  // 잔 리팅
+    private float afterImageDelay = 0.1f;  // 잔상 생성 간격
+    private float lastAfterImageTime;
+
     [Header("Platform Drop")]
-    private Coroutine currentDashCoroutine;
-    private Collider2D playerCollider;
-    private bool canDropDown = true;
+    public LayerMask playerPassthroughLayer;  // Inspector에서 설정할 수 있도록 추가
+    private float dropCheckRadius = 0.1f;  // 플랫폼 체크 범위
+    public float dropSpeed = 1f;  // Inspector에서 조절 가능한 낙하 속도
 
-    // IsGrounded 프로퍼티 추가
-    public bool IsGrounded { get; private set; }
+    private Coroutine currentDashCoroutine;  // 현재 실행 중인 대시 코루틴 참조
 
-    // 캐싱된 GameManager 설정값들
-    private float moveSpeed;
-    private float jumpForce;
-    private int maxJumpCount;
-    private float dashForce;
-    private float dashCooldown;
+    private Collider2D playerCollider;  // 플레이어의 콜라이더 참조 추가
 
-    [Header("Health")]
-    [SerializeField] private int maxHealth = 100;
-    private int currentHealth;
+    private bool canDropDown = true;  // 아래 방향키 입력 가능 여부
 
-    // 체력 관련 프로퍼티 추가
-    public int MaxHealth => maxHealth;
-    public int CurrentHealth => currentHealth;
-
-    // 플레이어 사망 상태를 저장하는 static 변수 추가
-    public static bool IsDead { get; private set; }
-
-    [Header("Knockback Settings")]
-    [SerializeField] private float knockbackForce = 10f;
-    [SerializeField] private float knockbackDuration = 0.2f;
-    private bool isKnockedBack = false;
-    private float knockbackTimer = 0f;
+    public bool IsGrounded
+    {
+        get { return isGrounded; }
+        private set { isGrounded = value; }
+    }
 
     void Start()
     {
-        // GameManager에서 설정값 가져오기
-        moveSpeed = GameManager.Instance.playerMoveSpeed;
-        jumpForce = GameManager.Instance.playerJumpForce;
-        maxJumpCount = GameManager.Instance.playerMaxJumpCount;
-        dashForce = GameManager.Instance.playerDashForce;
-        dashCooldown = GameManager.Instance.playerDashCooldown;
-        maxHealth = GameManager.Instance.playerMaxHealth;
-        currentHealth = maxHealth;
-
-        // 컴포넌트 초기화
         rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb.gravityScale = GameManager.Instance.playerGravityScale;
+        rb.gravityScale = 2.5f;  // 중력 스케일을 1로 복구
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.drag = 0f;
-        
         spriteRenderer = GetComponent<SpriteRenderer>();
         remainingJumps = maxJumpCount;
         playerCollider = GetComponent<Collider2D>();
-        IsDead = false;
-
-        // GameManager에서 저장된 상태 복원
-        GameManager.Instance.RestorePlayerState(this);
-        
-        Debug.Log($"Player initialized with health: {currentHealth}");  // 디버그용
     }
+    // void OnTriggerEnter2D(Collider2D collision) {
+    // //Tag가 item일 때
+	// if (collision.gameObject.tag == "Item") {
+	// 	//Deactive Item
+	// 	collision.gameObject.SetActive(false);
+    //     GameManager.instance.Score++;
+	// }
+    //}
 
     void FixedUpdate()
     {
         CheckGround();
         
-        // 넉백 중이면 플레이어 입력 무시
-        if (isKnockedBack)
-        {
-            knockbackTimer -= Time.fixedDeltaTime;
-            if (knockbackTimer <= 0)
-            {
-                isKnockedBack = false;
-            }
-            return;
-        }
-
         if (!isDashing)
         {
             float moveInput = Input.GetAxisRaw("Horizontal");
@@ -121,8 +98,9 @@ public class PlayerController : MonoBehaviour, IDamageable
             spriteRenderer.flipX = moveInput < 0;
         }
 
-        if (Input.GetButtonDown("Jump") && remainingJumps > 0)
+        if (!GameManager.instance.isPlayerInRange&&Input.GetButtonDown("Jump") && remainingJumps > 0)
         {
+            Debug.Log($"Jump executed. Remaining jumps: {remainingJumps-1}");
             rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             remainingJumps--;
@@ -153,6 +131,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 아래 방향키를 누르면 플랫폼 통과
         if (Input.GetAxisRaw("Vertical") < 0 && IsGrounded && canDropDown)
         {
+            Debug.Log("아래 방향키 감지됨");
             
             // 감지 위를 더 크게 설정하고 플레이어 발 위치에서 체크
             Vector2 feetPosition = new Vector2(transform.position.x, 
@@ -162,9 +141,11 @@ public class PlayerController : MonoBehaviour, IDamageable
             
             foreach (Collider2D col in colliders)
             {
+                Debug.Log($"감지된 오브젝트: {col.gameObject.name}, 태그: {col.tag}");
                 
                 if (col.CompareTag("OneWayPlatform"))
                 {
+                    Debug.Log("OneWayPlatform 감지됨 - 통과 시도");
                     canDropDown = false;  // 아래키 입력 비활성화
                     StartCoroutine(DisableCollisionCoroutine(col));
                     break;
@@ -292,6 +273,15 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
+    private bool isWallBouncing = false;
+
+    private IEnumerator BriefInputDelay()
+    {
+        isWallBouncing = true;
+        yield return new WaitForSeconds(0.1f);  // 0.1 동안 입력 무시
+        isWallBouncing = false;
+    }
+
     // OnDisable 추가
     void OnDisable()
     {
@@ -317,10 +307,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             timer += Time.deltaTime;
             
-            // 새로운 플랫폼에 착지했는지 확인
+            // 새로운 플��폼에 착지했는지 확인
             if (IsGrounded && !Physics2D.GetIgnoreCollision(playerCollider, platformCollider))
             {
                 hasLanded = true;
+                Debug.Log("새로운 플랫폼에 착지");
             }
             
             yield return null;
@@ -342,65 +333,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
             if (playerBottom >= monsterTop - 0.1f)
             {
-                // 몬스터 머리 위에서 충돌했을 때 점프 횟만 초기화
+                // 몬스터 머리 위에서 충돌했을 때 점프 횟수만 초기화
                 remainingJumps = maxJumpCount;
                 Debug.Log("Monster head hit - jumps reset!");
             }
         }
-    }
-
-    // IDamageable 인터페이스 구현
-    public void TakeDamage(int damage, Vector2 knockbackDirection, float knockbackForce)
-    {
-        currentHealth = Mathf.Max(0, currentHealth - damage);
-        Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
-
-        if (knockbackDirection != default)
-        {
-            ApplyKnockback(knockbackDirection, knockbackForce);
-        }
-        
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    private void ApplyKnockback(Vector2 direction, float force)
-    {
-        isKnockedBack = true;
-        knockbackTimer = knockbackDuration;
-        
-        rb.velocity = Vector2.zero;
-        rb.AddForce(direction.normalized * force, ForceMode2D.Impulse);
-    }
-
-    private void Die()
-    {
-        Debug.Log("Player died!");
-        IsDead = true; // 사망 상태 설정
-
-        // 모든 활성화된 EnemyProjectile 찾기 및 비활성화
-        GameObject[] projectiles = GameObject.FindGameObjectsWithTag("EnemyProjectile");
-        foreach (GameObject projectile in projectiles)
-        {
-            if (projectile.activeInHierarchy)
-            {
-                projectile.SetActive(false);
-            }
-        }
-        
-        // 선택사항: 플레이어 캐릭터 비활성화 또는 사망 애니메이션 재생
-        // gameObject.SetActive(false);
-        
-        // 선택사항: 게임오버 UI 표시
-        // GameManager.Instance.ShowGameOver();
-    }
-
-    public void RestoreHealth(int health)
-    {
-        currentHealth = health;
-        Debug.Log($"Health restored to: {currentHealth}");  // 디버그용
     }
 }
 

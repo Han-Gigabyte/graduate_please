@@ -5,21 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - OneWayPlatform
-  - Enemy
-  - EnemyProjectile
-  - Portal
+  - Item
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
   - Ground
-  - Enemy
-  - PlayerPassthrough
-  - EnemyProjectile
+  - 
+  - 
+  - 
   - 
   - 
   - 
