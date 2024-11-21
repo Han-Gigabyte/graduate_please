@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9ab830d02ec4bf090efefc2f4c109a, type: 3}
   m_Name: Ariel
   m_EditorClassIdentifier: 
+  characterSprite: {fileID: 533706356, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
   characterName: "\uC5D0\uB9AC\uC5BC"
   level: 0
   description: "\uC124\uBA85"
