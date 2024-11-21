@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;  // TextMeshPro를 사용할 경우
 
 public class PlayerUI : MonoBehaviour
 {
     [Header("Health UI")]
     [SerializeField] private Slider healthSlider;
-    [SerializeField] private TextMeshProUGUI healthText;
 
     [Header("Position Settings")]
     [SerializeField] private Vector3 offset = new Vector3(0, -85f, 0);
@@ -19,21 +17,16 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>();
         mainCamera = Camera.main;
         rectTransform = GetComponent<RectTransform>();
         
         offset = new Vector3(0, -85f, 0);
         
+        // PlayerController를 찾고 슬라이더 초기화
+        player = FindObjectOfType<PlayerController>();
         if (player != null)
         {
-            healthSlider.maxValue = GameManager.Instance.playerMaxHealth;
-            healthSlider.value = player.CurrentHealth;
-            
-            if (healthText != null)
-            {
-                UpdateHealthText();
-            }
+            InitializeHealthUI();
         }
     }
 
@@ -44,17 +37,19 @@ public class PlayerUI : MonoBehaviour
             Vector3 screenPos = mainCamera.WorldToScreenPoint(player.transform.position);
             rectTransform.position = screenPos + offset;
             
-            healthSlider.value = player.CurrentHealth;
-            
-            if (healthText != null)
-            {
-                UpdateHealthText();
-            }
+            healthSlider.value = player.CurrentHealth; // 슬라이더의 값을 플레이어의 현재 체력으로 업데이트
         }
     }
 
-    private void UpdateHealthText()
+    private void InitializeHealthUI()
     {
-        healthText.text = $"{player.CurrentHealth} / {GameManager.Instance.playerMaxHealth}";
+        healthSlider.maxValue = player.MaxHealth; // 플레이어의 최대 체력으로 설정
+        healthSlider.value = player.CurrentHealth; // 초기 체력 설정
+    }
+
+    public void SetPlayer(PlayerController playerController)
+    {
+        player = playerController; // PlayerController를 설정
+        InitializeHealthUI(); // 슬라이더 초기화
     }
 }

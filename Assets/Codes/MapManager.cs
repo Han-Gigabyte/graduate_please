@@ -81,6 +81,20 @@ public class MapManager : MonoBehaviour
 
     public void GenerateStage()
     {
+        // 기존 타일맵이 존재하는지 확인
+        if (targetTilemap == null)
+        {
+            // 타일맵이 없으면 새로 생성
+            targetTilemap = new GameObject("Tilemap").AddComponent<Tilemap>();
+            // TilemapRenderer 추가
+            targetTilemap.gameObject.AddComponent<TilemapRenderer>();
+        }
+        else
+        {
+            // 기존 타일맵 클리어
+            targetTilemap.ClearAllTiles();
+        }
+
         // 기존 맵 섹션들 제거
         foreach (var section in currentMapSections)
         {
@@ -193,6 +207,12 @@ public class MapManager : MonoBehaviour
 
     private void CopyTilemapToTarget(Tilemap sourceTilemap, Vector3Int offset)
     {
+        if (sourceTilemap == null)
+        {
+            Debug.LogWarning("Source Tilemap is null. Cannot copy tiles.");
+            return; // Tilemap이 null인 경우 메서드 종료
+        }
+
         BoundsInt bounds = sourceTilemap.cellBounds;
 
         foreach (Vector3Int position in bounds.allPositionsWithin)

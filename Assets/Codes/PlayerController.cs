@@ -80,6 +80,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         GameManager.Instance.RestorePlayerState(this);
         
         Debug.Log($"Player initialized with health: {currentHealth}");  // 디버그용
+
+        // PlayerUI 프리팹을 찾아서 인스턴스화
+        GameObject playerUI = Instantiate(GameManager.Instance.playerUIPrefab); // GameManager에서 PlayerUI 프리팹을 가져온다고 가정
+        playerUI.GetComponent<PlayerUI>().SetPlayer(this); // PlayerUI에 플레이어를 설정
     }
 
     void FixedUpdate()
@@ -121,15 +125,32 @@ public class PlayerController : MonoBehaviour, IDamageable
             spriteRenderer.flipX = moveInput < 0;
         }
 
-        if (Input.GetButtonDown("Jump") && remainingJumps > 0)
+        // 점프 입력 처리
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            remainingJumps--;
-            
+            // 땅에 있을 때 점프
             if (IsGrounded)
             {
-                hasJumped = true;
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                remainingJumps = maxJumpCount; // 점프 횟수 초기화
+                hasJumped = false; // 점프 상태 초기화
+            }
+            // 점프를 하지 않은 상태에서 떨어질 때 점프
+            else if (remainingJumps > 0 && !hasJumped)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                remainingJumps = 0; // 점프 횟수를 0으로 고정
+                hasJumped = true; // 점프 상태 설정
+            }
+            // 땅에 있지 않을 때 더블 점프
+            else if (remainingJumps > 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                remainingJumps--; // 점프 횟수 감소
+                hasJumped = true; // 점프 상태 설정
             }
         }
 
@@ -153,7 +174,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 아래 방향키를 누르면 플랫폼 통과
         if (Input.GetAxisRaw("Vertical") < 0 && IsGrounded && canDropDown)
         {
-            
             // 감지 위를 더 크게 설정하고 플레이어 발 위치에서 체크
             Vector2 feetPosition = new Vector2(transform.position.x, 
                 transform.position.y - GetComponent<Collider2D>().bounds.extents.y);
@@ -162,7 +182,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             
             foreach (Collider2D col in colliders)
             {
-                
                 if (col.CompareTag("OneWayPlatform"))
                 {
                     canDropDown = false;  // 아래키 입력 비활성화
@@ -178,7 +197,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         // BoxCast의 시작점을 플레이어의 발 위치로 조정
         Vector2 boxCastOrigin = new Vector2(
             transform.position.x,
-            transform.position.y - (GetComponent<Collider2D>().bounds.extents.y - groundCheckSize.y/2)
+            transform.position.y - (GetComponent<Collider2D>().bounds.extents.y - groundCheckSize.y / 2)
         );
 
         RaycastHit2D hit = Physics2D.BoxCast(
@@ -196,8 +215,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         // 땅에 착지했을 때 점프 횟수 초기화
         if (!wasGrounded && IsGrounded)
         {
-            remainingJumps = maxJumpCount;
-            hasJumped = false;
+            remainingJumps = maxJumpCount; // 점프 횟수 초기화
+            hasJumped = false; // 점프 상태 초기화
         }
 
         // 상태 변경 시 로그 출력
@@ -355,6 +374,13 @@ public class PlayerController : MonoBehaviour, IDamageable
         currentHealth = Mathf.Max(0, currentHealth - damage);
         Debug.Log($"Player took {damage} damage. Current health: {currentHealth}");
 
+        // 슬라이더 업데이트를 위해 PlayerUI에 알림
+        PlayerUI playerUI = FindObjectOfType<PlayerUI>();
+        if (playerUI != null)
+        {
+            playerUI.SetPlayer(this); // PlayerUI에 플레이어를 설정하여 슬라이더 업데이트
+        }
+
         if (knockbackDirection != default)
         {
             ApplyKnockback(knockbackDirection, knockbackForce);
@@ -399,8 +425,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void RestoreHealth(int health)
     {
-        currentHealth = health;
+        currentHealth = Mathf.Min(maxHealth, health); // 최대 체력을 초과하지 않도록 설정
         Debug.Log($"Health restored to: {currentHealth}");  // 디버그용
+
+        // 슬라이더 업데이트를 위해 PlayerUI에 알림
+        PlayerUI playerUI = FindObjectOfType<PlayerUI>();
+        if (playerUI != null)
+        {
+            playerUI.SetPlayer(this); // PlayerUI에 플레이어를 설정하여 슬라이더 업데이트
+        }
     }
 }
 
