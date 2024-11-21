@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     public float enemyProjectileKnockbackForce = 8f;
 
     private const int MAX_STAGE = 10;  // 스테이지 최대값 상수 추가
+    public SpriteRenderer playerSpriteRenderer;
 
     // 플레이어 현재 상태 저장용 변수
     private int currentPlayerHealth;
@@ -61,6 +62,26 @@ public class GameManager : MonoBehaviour
         get => currentPlayerHealth;
         set => currentPlayerHealth = value;
     }
+
+    private void Start()
+    {
+        if (CharacterSelectionData.Instance != null)
+        {
+            if (CharacterSelectionData.Instance.selectedCharacterSprite != null)
+            {
+                playerSpriteRenderer.sprite = CharacterSelectionData.Instance.selectedCharacterSprite;
+            }
+            else
+            {
+                Debug.LogError("selectedCharacterSprite is null! Ensure that a character is selected before loading the game scene.");
+            }
+        }
+        else
+        {
+            Debug.LogError("CharacterSelectionData.Instance is null!");
+        }
+    }
+
 
     [Header("UI Prefabs")]
     public GameObject playerUIPrefab; // PlayerUI 프리팹을 위한 변수

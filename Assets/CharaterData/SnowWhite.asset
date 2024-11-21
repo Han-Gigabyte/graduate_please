@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9ab830d02ec4bf090efefc2f4c109a, type: 3}
   m_Name: SnowWhite
   m_EditorClassIdentifier: 
+  characterSprite: {fileID: -173903468, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
   characterName: "\uBC31\uC124\uACF5\uC8FC"
   level: 0
   description: "\uC124\uBA85"

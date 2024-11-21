@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9ab830d02ec4bf090efefc2f4c109a, type: 3}
   m_Name: WereWolf
   m_EditorClassIdentifier: 
+  characterSprite: {fileID: 1553551292, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
   characterName: "\uC6E8\uC5B4\uC6B8\uD504"
   level: 0
   description: "\uC124\uBA85"
-  vitality: 0
-  power: 0
-  agility: 0
-  luck: 0
+  vitality: 5
+  power: 5
+  agility: 5
+  luck: 5
