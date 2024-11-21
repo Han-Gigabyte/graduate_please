@@ -42,6 +42,8 @@ public class CharacterManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Characters array length: " + characters.Length);
+
         characterInfoPanel.SetActive(false);
         upgradePanel.SetActive(false);
 
