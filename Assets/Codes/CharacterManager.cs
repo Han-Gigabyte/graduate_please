@@ -7,62 +7,41 @@ using UnityEngine.SceneManagement;
 
 public class CharacterManager : MonoBehaviour
 {
-    public static CharacterManager Instance { get; private set; } // 싱글톤
+    public CharacterData[] characters;        // 캐릭터 데이터 배열
+    public Text characterNameText;            // 캐릭터 이름 텍스트
+    public Text descriptionText;              // 캐릭터 설명 텍스트
+    public Text levelText;                    // 캐릭터 레벨 텍스트
 
-    [Header("Character Data")]
-    public CharacterData[] characters; // 캐릭터 데이터 배열
-    public int currentCharacterIndex = 0; // 현재 선택된 캐릭터 인덱스
+    public GameObject characterInfoPanel;     // 캐릭터 정보 패널
+    public GameObject upgradePanel;           // 업그레이드 패널
 
-    [Header("UI Elements")]
-    public GameObject characterInfoPanel; // 캐릭터 정보 패널
-    public GameObject upgradePanel; // 업그레이드 패널
-    public Image characterImage; // 캐릭터 이미지
-    public Text characterNameText; // 캐릭터 이름 텍스트
-    public Text descriptionText; // 캐릭터 설명 텍스트
+    // 업그레이드 패널 UI 요소
+    public Text upgradeNameText;
+    public Text upgradeLevelText;
+    public Text vitalityText;
+    public Text powerText;
+    public Text agilityText;
+    public Text luckText;
 
-    [Header("Upgrade UI Elements")]
-    public Image upgradeCharacterImage; // 캐릭터 이미지
-    public Text upgradeCharacterNameText; // 캐릭터 이름 텍스트
-    public Text vitalityText; // 생명력 텍스트
-    public Text powerText; // 파워 텍스트
-    public Text agilityText; // 민첩 텍스트
-    public Text luckText; // 행운 텍스트
-    public Button increaseVitalityButton;
-    public Button increasePowerButton;
-    public Button increaseAgilityButton;
-    public Button increaseLuckButton;
-
-    [Header("Buttons")]
+    public Button characterButton1;
+    public Button characterButton2;
+    public Button characterButton3;
+    public Button characterButton4;
+    public Button characterButton5;
+    public Button characterButton6;
+    public Button characterButton7;
+    public Button backButton;
     public Button upgradeButton;
-    public Button selectButton;
-    public Button closeInfoButton;
-    public Button closeUpgradeButton;
+    public Button increaseVitalityButton;     // 생명력 + 버튼
+    public Button increasePowerButton;        // 파워 + 버튼
+    public Button increaseAgilityButton;      // 민첩 + 버튼
+    public Button increaseLuckButton;         // 행운 + 버튼
+    public Button closeUpgradeButton;         // 업그레이드 창 닫기 버튼
 
-    [Header("Character Buttons")]
-    public Button[] characterButtons; // 캐릭터 버튼 배열
-
-    private void Awake()
-    {
-        // 싱글톤 초기화
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 이동 시 파괴되지 않도록 설정
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    private int currentCharacterIndex = 0;
 
     private void Start()
     {
-        // 캐릭터 버튼 클릭 이벤트 연결
-        for (int i = 0; i < characterButtons.Length; i++)
-        {
-            int index = i; // 로컬 변수로 복사
-            characterButtons[i].onClick.AddListener(() => ShowCharacterInfo(index));
-        }
         Debug.Log("Characters array length: " + characters.Length);
 
         characterInfoPanel.SetActive(false);
@@ -90,20 +69,14 @@ public class CharacterManager : MonoBehaviour
         characterButton6.onClick.AddListener(() => ShowCharacterInfo(5));
         characterButton7.onClick.AddListener(() => ShowCharacterInfo(6));
 
-        // 버튼 동작 연결
+        backButton.onClick.AddListener(HideCharacterInfo);
         upgradeButton.onClick.AddListener(ShowUpgradePanel);
-        selectButton.onClick.AddListener(OnSelectButtonClick);
-        closeUpgradeButton.onClick.AddListener(CloseUpgradePanel);
 
-        // 업그레이드 버튼 동작
+        // + 버튼에 각각의 증가 함수 연결
         increaseVitalityButton.onClick.AddListener(IncreaseVitality);
         increasePowerButton.onClick.AddListener(IncreasePower);
         increaseAgilityButton.onClick.AddListener(IncreaseAgility);
         increaseLuckButton.onClick.AddListener(IncreaseLuck);
-
-        // 초기 상태
-        characterInfoPanel.SetActive(false);
-        upgradePanel.SetActive(false);
 
         closeUpgradeButton.onClick.AddListener(CloseUpgradePanel); // 업그레이드 창 닫기 버튼에 이벤트 추가
 
@@ -135,42 +108,39 @@ public class CharacterManager : MonoBehaviour
         SceneManager.LoadScene("GameScene");  // "GameScene"는 인게임 씬의 이름
     }
 
-    // 캐릭터 정보 패널 열기
     public void ShowCharacterInfo(int index)
     {
-        currentCharacterIndex = index;
-        CharacterData character = characters[index];
+        characterInfoPanel.SetActive(true);
+        characterButton1.interactable = false;
+        characterButton2.interactable = false;
+        characterButton3.interactable = false;
+        characterButton4.interactable = false;
+        characterButton5.interactable = false;
+        characterButton6.interactable = false;
+        characterButton7.interactable = false;
 
-        characterImage.sprite = character.characterSprite;
+        LoadCharacter(index);
+    }
+
+    public void HideCharacterInfo()
+    {
+        characterInfoPanel.SetActive(false);
+        characterButton1.interactable = true;
+        characterButton2.interactable = true;
+        characterButton3.interactable = true;
+        characterButton4.interactable = true;
+        characterButton5.interactable = true;
+        characterButton6.interactable = true;
+        characterButton7.interactable = true;
+    }
+
+    public void LoadCharacter(int index)
+    {
+        CharacterData character = characters[index];
         characterNameText.text = character.characterName;
         descriptionText.text = character.description;
+        levelText.text = "Level: " + character.level;
 
-        characterInfoPanel.SetActive(true);
-    }
-
-    // 캐릭터 정보 패널 닫기
-    public void CloseInfoPanel()
-    {
-        characterInfoPanel.SetActive(false);
-    }
-
-    // 업그레이드 패널 열기
-    public void ShowUpgradePanel()
-    {
-        CharacterData character = characters[currentCharacterIndex];
-
-        upgradeCharacterImage.sprite = character.characterSprite;
-        upgradeCharacterNameText.text = character.characterName;
-
-        // 현재 상태 표시
-        vitalityText.text = $"VIT: {character.vitality}";
-        powerText.text = $"POW: {character.power}";
-        agilityText.text = $"AGI: {character.agility}";
-        luckText.text = $"LUK: {character.luck}";
-
-        characterInfoPanel.SetActive(false);
-        upgradePanel.SetActive(true);
-        
         // 업그레이드 창에 동일하게 표시
         upgradeNameText.text = character.characterName;
         upgradeLevelText.text = "Level: " + character.level;
@@ -181,31 +151,30 @@ public class CharacterManager : MonoBehaviour
         currentCharacterIndex = index;
     }
 
-    // 업그레이드 패널 닫기
-    public void CloseUpgradePanel()
+    public void ShowUpgradePanel()
     {
-        upgradePanel.SetActive(false);
-        characterInfoPanel.SetActive(true);
+        characterInfoPanel.SetActive(false); // 캐릭터 정보 창 숨기기
+        upgradePanel.SetActive(true);
+        LoadUpgradePanel();
     }
 
-    // 캐릭터 선택 -> 게임 씬으로 이동
-    public void OnSelectButtonClick()
+    public void LoadUpgradePanel()
     {
         CharacterData character = characters[currentCharacterIndex];
-        CharacterSelectionData.Instance.selectedCharacterSprite = character.characterSprite;
-
-        SceneManager.LoadScene("GameScene");
+        upgradeNameText.text = character.characterName;
+        upgradeLevelText.text = "Level: " + character.level;
+        vitalityText.text = "VIT: " + character.vitality;
+        powerText.text = "POW: " + character.power;
+        agilityText.text = "AGI: " + character.agility;
+        luckText.text = "LUK: " + character.luck;
     }
 
-
-    // 스탯 증가 기능
     public void IncreaseVitality()
     {
         CharacterData character = characters[currentCharacterIndex];
         if (character.vitality < 5)
         {
             character.vitality++;
-            vitalityText.text = $"VIT: {character.vitality}";
             vitalityText.text = "VIT: " + character.vitality;
             UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
@@ -218,7 +187,6 @@ public class CharacterManager : MonoBehaviour
         if (character.power < 5)
         {
             character.power++;
-            powerText.text = $"POW: {character.power}";
             powerText.text = "POW: " + character.power;
             UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
@@ -231,7 +199,6 @@ public class CharacterManager : MonoBehaviour
         if (character.agility < 5)
         {
             character.agility++;
-            agilityText.text = $"AGI: {character.agility}";
             agilityText.text = "AGI: " + character.agility;
             UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
@@ -244,9 +211,6 @@ public class CharacterManager : MonoBehaviour
         if (character.luck < 5)
         {
             character.luck++;
-            luckText.text = $"LUK: {character.luck}";
-        }
-    }
             luckText.text = "LUK: " + character.luck;
             UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
