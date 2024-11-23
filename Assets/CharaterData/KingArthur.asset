@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: KingArthur
   m_EditorClassIdentifier: 
   characterName: "\uC544\uC11C\uC655"
-  level: 0
+  characterSprite: {fileID: -1526825567, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
+  level: 1
   description: "\uC124\uBA85 "
   vitality: 0
   power: 0
