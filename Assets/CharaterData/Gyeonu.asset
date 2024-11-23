@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Gyeonu
   m_EditorClassIdentifier: 
   characterName: "\uACAC\uC6B0"
-  level: 0
+  characterSprite: {fileID: 2078494679, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
+  level: 1
   description: "\uC124\uBA85"
   vitality: 0
   power: 0
