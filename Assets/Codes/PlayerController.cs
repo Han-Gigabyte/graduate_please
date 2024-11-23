@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         // 점프 입력 처리
-        if (!GameManager.Instance.IsPlayerInRange && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             // 땅에 있을 때 점프
             if (IsGrounded)
@@ -423,7 +423,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         // GameManager.Instance.ShowGameOver();
     }
 
-    public void RestoreHealth(int health)
+    public void RestoreHealth(int health) //체력 회복하는 함수 아님. 데이터에서 플레이어의 체력 불러오는 함수
     {
         currentHealth = Mathf.Min(maxHealth, health); // 최대 체력을 초과하지 않도록 설정
         Debug.Log($"Health restored to: {currentHealth}");  // 디버그용
