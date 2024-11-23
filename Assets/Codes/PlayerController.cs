@@ -83,8 +83,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         GameManager.Instance.RestorePlayerState(this);
         
         Debug.Log($"Player initialized with health: {currentHealth}");  // 디버그용
-
-
+        
         // CharacterSelectionData에서 선택된 캐릭터의 스프라이트를 가져와서 적용
         if (CharacterSelectionData.Instance != null && CharacterSelectionData.Instance.selectedCharacterSprite != null)
         {
@@ -94,6 +93,9 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             Debug.LogError("Selected character sprite is missing!");
         }
+        //// PlayerUI 프리팹을 찾아서 인스턴스화
+        //GameObject playerUI = Instantiate(GameManager.Instance.playerUIPrefab); // GameManager에서 PlayerUI 프리팹을 가져온다고 가정
+        //playerUI.GetComponent<PlayerUI>().SetPlayer(this); // PlayerUI에 플레이어를 설정
     }
 
     void FixedUpdate()

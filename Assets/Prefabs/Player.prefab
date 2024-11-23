@@ -20,7 +20,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8643484485514713390
+--- !u!4 &8643483485514713390
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,15 +99,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5419a2d7d9f24cf45ac984789c51ff87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckDistance: 0.02
+  groundCheckDistance: 0.1  # 선택한 값
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   groundCheckSize: {x: 0.4, y: 0.1}
   maxHealth: 100
   knockbackForce: 10
   knockbackDuration: 0.2
-  playerSpriteRenderer: {fileID: 4653082698377534761}
 --- !u!61 &2082738595614601047
 BoxCollider2D:
   m_ObjectHideFlags: 0
