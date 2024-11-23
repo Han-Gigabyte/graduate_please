@@ -196,18 +196,4 @@ public class GameManager : MonoBehaviour
             player.transform.position = startPosition;
         }
     }
-
-    void Start()
-    {
-        // 선택된 캐릭터 스프라이트를 Player Sprite에 적용
-        if (CharacterSelectionData.Instance != null && CharacterSelectionData.Instance.selectedCharacterSprite != null)
-        {
-            playerSpriteRenderer.sprite = CharacterSelectionData.Instance.selectedCharacterSprite;
-        }
-        else
-        {
-
-            Debug.LogError("Selected character sprite is missing!");
-        }
-    }
 }
