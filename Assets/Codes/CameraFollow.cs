@@ -4,8 +4,7 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;        // 따라갈 대상 (플레이어)
     public float smoothSpeed = 5f;  // 카메라 이동 부드러움 정도
-    public Vector3 offset;         // 카메라와 플레이어 사이의 거리
-
+    public Vector3 offset;         // 카메라와 플레이어 사이의 거리'
     void LateUpdate()
     {
         if (target == null)

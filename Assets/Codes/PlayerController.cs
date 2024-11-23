@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
 
         // 점프 입력 처리
-        if (Input.GetButtonDown("Jump"))
+        if (!GameManager.Instance.IsPlayerInRange&&Input.GetButtonDown("Jump"))
         {
             // 땅에 있을 때 점프
             if (IsGrounded)
