@@ -189,7 +189,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8962749516033509532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d8b8a165aa35c0489027f8a37d10ce0, type: 3}
+  m_Script: {fileID: 11500000, guid: 5419a2d7d9f24cf45ac984789c51ff87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCheckDistance: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckSize: {x: 0.4, y: 0.1}
   maxHealth: 100
+  knockbackForce: 10
+  knockbackDuration: 0.2

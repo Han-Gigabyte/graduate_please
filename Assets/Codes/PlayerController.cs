@@ -81,9 +81,9 @@ public class PlayerController : MonoBehaviour, IDamageable
         
         Debug.Log($"Player initialized with health: {currentHealth}");  // 디버그용
 
-        // PlayerUI 프리팹을 찾아서 인스턴스화
-        GameObject playerUI = Instantiate(GameManager.Instance.playerUIPrefab); // GameManager에서 PlayerUI 프리팹을 가져온다고 가정
-        playerUI.GetComponent<PlayerUI>().SetPlayer(this); // PlayerUI에 플레이어를 설정
+        //// PlayerUI 프리팹을 찾아서 인스턴스화
+        //GameObject playerUI = Instantiate(GameManager.Instance.playerUIPrefab); // GameManager에서 PlayerUI 프리팹을 가져온다고 가정
+        //playerUI.GetComponent<PlayerUI>().SetPlayer(this); // PlayerUI에 플레이어를 설정
     }
 
     void FixedUpdate()

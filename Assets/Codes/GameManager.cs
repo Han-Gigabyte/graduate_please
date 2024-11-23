@@ -194,10 +194,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
-        // PlayerUI 프리팹을 찾아서 인스턴스화
-        GameObject playerUI = Instantiate(playerUIPrefab);
-        playerUI.GetComponent<PlayerUI>().SetPlayer(FindObjectOfType<PlayerController>());
+        
     }
 }
