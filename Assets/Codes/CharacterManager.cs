@@ -7,15 +7,19 @@ using UnityEngine.SceneManagement;
 
 public class CharacterManager : MonoBehaviour
 {
+    [Header("Character Data Info")]
     public CharacterData[] characters;        // 캐릭터 데이터 배열
+    public Image characterImage;              // 캐릭터 이미지
     public Text characterNameText;            // 캐릭터 이름 텍스트
     public Text descriptionText;              // 캐릭터 설명 텍스트
     public Text levelText;                    // 캐릭터 레벨 텍스트
 
+    [Header("Panel Info")]
     public GameObject characterInfoPanel;     // 캐릭터 정보 패널
     public GameObject upgradePanel;           // 업그레이드 패널
 
-    // 업그레이드 패널 UI 요소
+    [Header("Upgrade Info")]
+    public Image upgradeCharacterImage;
     public Text upgradeNameText;
     public Text upgradeLevelText;
     public Text vitalityText;
@@ -23,6 +27,8 @@ public class CharacterManager : MonoBehaviour
     public Text agilityText;
     public Text luckText;
 
+
+    [Header("Buttons")]
     public Button characterButton1;
     public Button characterButton2;
     public Button characterButton3;
@@ -31,11 +37,8 @@ public class CharacterManager : MonoBehaviour
     public Button characterButton6;
     public Button characterButton7;
     public Button backButton;
+    public Button selectButton;
     public Button upgradeButton;
-    public Button increaseVitalityButton;     // 생명력 + 버튼
-    public Button increasePowerButton;        // 파워 + 버튼
-    public Button increaseAgilityButton;      // 민첩 + 버튼
-    public Button increaseLuckButton;         // 행운 + 버튼
     public Button closeUpgradeButton;         // 업그레이드 창 닫기 버튼
 
     private int currentCharacterIndex = 0;
@@ -69,19 +72,13 @@ public class CharacterManager : MonoBehaviour
         characterButton6.onClick.AddListener(() => ShowCharacterInfo(5));
         characterButton7.onClick.AddListener(() => ShowCharacterInfo(6));
 
-        backButton.onClick.AddListener(HideCharacterInfo);
-        upgradeButton.onClick.AddListener(ShowUpgradePanel);
 
-        // + 버튼에 각각의 증가 함수 연결
-        increaseVitalityButton.onClick.AddListener(IncreaseVitality);
-        increasePowerButton.onClick.AddListener(IncreasePower);
-        increaseAgilityButton.onClick.AddListener(IncreaseAgility);
-        increaseLuckButton.onClick.AddListener(IncreaseLuck);
+        backButton.onClick.AddListener(HideCharacterInfo);
+        selectButton.onClick.AddListener(OnSelectButtonClick);
+        upgradeButton.onClick.AddListener(ShowUpgradePanel);
 
         closeUpgradeButton.onClick.AddListener(CloseUpgradePanel); // 업그레이드 창 닫기 버튼에 이벤트 추가
 
-        // 초기 버튼 상태 설정
-        UpdateUpgradeButtonStates();
     }
 
     private void Update()
@@ -98,15 +95,21 @@ public class CharacterManager : MonoBehaviour
         CharacterData character = characters[currentCharacterIndex];
         character.level++; // 레벨 증가
         SaveCharacterStats(); // 변경된 레벨 저장
-        UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
         LoadCharacter(currentCharacterIndex); // 캐릭터 정보 다시 로드
     }
 
     // Select 버튼 클릭
     public void OnSelectButtonClick()
     {
-        SceneManager.LoadScene("GameScene");  // "GameScene"는 인게임 씬의 이름
+        // 선택된 캐릭터의 데이터를 CharacterSelectionData에 저장
+        CharacterData selectedCharacter = characters[currentCharacterIndex];
+        CharacterSelectionData.Instance.selectedCharacterSprite = selectedCharacter.characterSprite;
+
+        // 게임 씬으로 이동
+        SceneManager.LoadScene("GameScene");
     }
+
+
 
     public void ShowCharacterInfo(int index)
     {
@@ -137,6 +140,7 @@ public class CharacterManager : MonoBehaviour
     public void LoadCharacter(int index)
     {
         CharacterData character = characters[index];
+        characterImage.sprite = character.characterSprite;
         characterNameText.text = character.characterName;
         descriptionText.text = character.description;
         levelText.text = "Level: " + character.level;
@@ -161,6 +165,7 @@ public class CharacterManager : MonoBehaviour
     public void LoadUpgradePanel()
     {
         CharacterData character = characters[currentCharacterIndex];
+        upgradeCharacterImage.sprite = character.characterSprite;
         upgradeNameText.text = character.characterName;
         upgradeLevelText.text = "Level: " + character.level;
         vitalityText.text = "VIT: " + character.vitality;
@@ -176,7 +181,6 @@ public class CharacterManager : MonoBehaviour
         {
             character.vitality++;
             vitalityText.text = "VIT: " + character.vitality;
-            UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
     }
@@ -188,7 +192,6 @@ public class CharacterManager : MonoBehaviour
         {
             character.power++;
             powerText.text = "POW: " + character.power;
-            UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
     }
@@ -200,7 +203,6 @@ public class CharacterManager : MonoBehaviour
         {
             character.agility++;
             agilityText.text = "AGI: " + character.agility;
-            UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
     }
@@ -212,7 +214,6 @@ public class CharacterManager : MonoBehaviour
         {
             character.luck++;
             luckText.text = "LUK: " + character.luck;
-            UpdateUpgradeButtonStates(); // 버튼 상태 업데이트
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
     }
@@ -236,18 +237,5 @@ public class CharacterManager : MonoBehaviour
         PlayerPrefs.Save(); // 변경 사항 저장
     }
 
-    private void UpdateUpgradeButtonStates()
-    {
-        CharacterData character = characters[currentCharacterIndex];
-        int totalStats = character.vitality + character.power + character.agility + character.luck;
-
-        // 현재 캐릭터의 레벨 - 1과 비교
-        bool canUpgrade = totalStats < character.level - 1;
-
-        // 버튼 활성화 상태 설정
-        increaseVitalityButton.interactable = canUpgrade;
-        increasePowerButton.interactable = canUpgrade;
-        increaseAgilityButton.interactable = canUpgrade;
-        increaseLuckButton.interactable = canUpgrade;
-    }
+    
 }

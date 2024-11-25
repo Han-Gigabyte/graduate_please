@@ -653,7 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -760,6 +760,7 @@ MonoBehaviour:
   rangedEnemyProjectileSpeed: 8
   enemyProjectileKnockbackForce: 4
   playerUIPrefab: {fileID: 6837033524123068816, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+  playerSpriteRenderer: {fileID: 4653082698377534761, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
 --- !u!4 &1950971167
 Transform:
   m_ObjectHideFlags: 0
@@ -783,6 +784,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1088104510}
     m_Modifications:
+    - target: {fileID: 2548102870750961219, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2548102870750961219, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2556049170835707150, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -809,11 +818,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2556049170835707150, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2556049170835707150, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2556049170835707150, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_LocalPosition.x
@@ -875,8 +884,32 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4687255672470172360, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4687255672470172360, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_FillCenter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6767437284111935522, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6767437284111935522, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6767437284111935522, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6767437284111935522, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6767437284111935522, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6837033524123068816, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
@@ -884,8 +917,24 @@ PrefabInstance:
       value: Health
       objectReference: {fileID: 0}
     - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_Value
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_WholeNumbers
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_TargetGraphic
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7393478940977863366, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
