@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8643484485514713390}
+  - component: {fileID: 8643483485514713390}
   - component: {fileID: 4653082698377534761}
   - component: {fileID: 5354624974201830981}
   - component: {fileID: 2082738595614601047}
@@ -99,14 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5419a2d7d9f24cf45ac984789c51ff87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheckDistance: 0.1  # 선택한 값
+  groundCheckDistance: 0.1
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   groundCheckSize: {x: 0.4, y: 0.1}
   maxHealth: 100
   knockbackForce: 10
   knockbackDuration: 0.2
+  playerSpriteRenderer: {fileID: 4653082698377534761}
 --- !u!61 &2082738595614601047
 BoxCollider2D:
   m_ObjectHideFlags: 0
