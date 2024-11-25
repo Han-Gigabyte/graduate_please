@@ -18,6 +18,10 @@ public class StagePortal : MonoBehaviour
                 // 스테이지 4와 8 이후에는 Store 씬으로 이동
                 if (currentStage == 4 || currentStage == 8)
                 {
+                    // 기존 몬스터와 투사체 제거
+                    MapManager.Instance.DestroyAllEnemies();
+                    MapManager.Instance.DestroyAllProjectiles();
+
                     SceneManager.LoadScene("Store"); // Store 씬으로 이동
                 }
                 else
