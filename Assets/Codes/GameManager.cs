@@ -62,8 +62,11 @@ public class GameManager : MonoBehaviour
         set => currentPlayerHealth = value;
     }
 
+
     [Header("UI Prefabs")]
     public GameObject playerUIPrefab; // PlayerUI 프리팹을 위한 변수
+    public SpriteRenderer playerSpriteRenderer; // 게임 캐릭터의 SpriteRenderer
+
 
     private void Awake()
     {
@@ -193,11 +196,8 @@ public class GameManager : MonoBehaviour
             player.transform.position = startPosition;
         }
     }
-
-    void Start()
+    private void Start()
     {
-        // PlayerUI 프리팹을 찾아서 인스턴스화
-        GameObject playerUI = Instantiate(playerUIPrefab);
-        playerUI.GetComponent<PlayerUI>().SetPlayer(FindObjectOfType<PlayerController>());
+        
     }
 }

@@ -17,12 +17,13 @@ public class NPCInteraction : MonoBehaviour
     public string[] exceptionDialogue; // 예외 대화 추가
 
     public bool isEventNPC = false;
-    public float eventProbability = 0.3f; // 이벤트 발생 확률 (0.3 = 30%)
+    public float eventProbability = 0.8f; // 이벤트 발생 확률 (0.3 = 30%)
 
     private int currentDialogueIndex = 0;
     private string[] Dialogues;
     private bool hasEventOccurred = false; // 이벤트 대화 완료 여부
     private bool hasInteractedOnce = false; // NPC와 첫 대화 완료 여부
+    private static bool isDialogueActive = false; // 대화창 활성화 상태
 
     private enum DialogueState { Normal, Event, Yes, No, Exception }
     private DialogueState currentState = DialogueState.Normal;
@@ -40,6 +41,9 @@ public class NPCInteraction : MonoBehaviour
 
     public void OnNPCButtonClicked()
     {
+        if (isDialogueActive)
+            return; // 대화창이 열려 있으면 클릭 무시
+
         if (hasInteractedOnce && isEventNPC)
         {
             SetDialogueState(DialogueState.Exception); // 첫 상호작용 이후 예외 대화로 설정
@@ -50,6 +54,7 @@ public class NPCInteraction : MonoBehaviour
             hasInteractedOnce = true; // 첫 대화 완료로 표시
         }
 
+        isDialogueActive = true; // 대화 활성화
         dialoguePanel.SetActive(true);
         DisplayNextDialogue();
     }
@@ -151,5 +156,6 @@ public class NPCInteraction : MonoBehaviour
         dialoguePanel.SetActive(false);
         HideYesNoButtons();
         currentState = DialogueState.Normal;
+        isDialogueActive = false; // 대화 비활성화
     }
 }

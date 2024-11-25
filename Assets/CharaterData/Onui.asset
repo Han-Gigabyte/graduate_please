@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Onui
   m_EditorClassIdentifier: 
   characterName: "\uC624\uB204\uC774"
-  level: 0
+  characterSprite: {fileID: 457236816, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
+  level: 1
   description: "\uC124\uBA85"
   vitality: 0
   power: 0
