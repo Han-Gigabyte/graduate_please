@@ -8,7 +8,7 @@ public class StorePlayerSpawner : MonoBehaviour
     private void Start()
     {
         // 플레이어 오브젝트 생성
-        GameObject playerObject = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject playerObject = Instantiate(playerPrefab, new Vector3(-5, 0, 0), Quaternion.identity);
         
         // CameraFollow의 target을 소환된 플레이어로 설정
         if (cameraFollow != null)
