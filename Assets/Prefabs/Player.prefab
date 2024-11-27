@@ -107,7 +107,7 @@ MonoBehaviour:
   maxHealth: 100
   knockbackForce: 10
   knockbackDuration: 0.2
-  playerSpriteRenderer: {fileID: 0}
+  playerSpriteRenderer: {fileID: 4653082698377534761}
 --- !u!61 &2082738595614601047
 BoxCollider2D:
   m_ObjectHideFlags: 0

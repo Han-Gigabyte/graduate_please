@@ -4537,6 +4537,10 @@ MonoBehaviour:
   powerText: {fileID: 784731621}
   agilityText: {fileID: 904019292}
   luckText: {fileID: 439965675}
+  vitalityUpgradeButton: {fileID: 1431339089}
+  powerUpgradeButton: {fileID: 183169303}
+  agilityUpgradeButton: {fileID: 93203889}
+  luckUpgradeButton: {fileID: 1858029951}
   characterButton1: {fileID: 1502784987}
   characterButton2: {fileID: 1976957753}
   characterButton3: {fileID: 612304498}
