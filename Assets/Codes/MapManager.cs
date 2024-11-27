@@ -81,6 +81,10 @@ public class MapManager : MonoBehaviour
 
     public void GenerateStage()
     {
+        // 기존 몬스터와 투사체 제거
+        DestroyAllEnemies();
+        DestroyAllProjectiles();
+
         // 기존 타일맵이 존재하는지 확인
         if (targetTilemap == null)
         {
@@ -303,5 +307,31 @@ public class MapManager : MonoBehaviour
 
         // SpawnManager를 통해 적 소환
         SpawnManager.Instance.SpawnEntities();
+    }
+
+    public void DestroyAllEnemies()
+    {
+        // 모든 몬스터 제거
+        GameObject[] Enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if (Enemies.Length > 0)
+        {
+            foreach (var enemy in Enemies)
+            {
+                Destroy(enemy);
+            }
+        }
+    }
+
+    public void DestroyAllProjectiles()
+    {
+        // 모든 원거리 몬스터의 투사체 제거
+        GameObject[] projectiles = GameObject.FindGameObjectsWithTag("EnemyProjectile");
+        if (projectiles.Length > 0)
+        {
+            foreach (var projectile in projectiles)
+            {
+                Destroy(projectile);
+            }
+        }
     }
 }

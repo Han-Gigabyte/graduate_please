@@ -47,10 +47,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     public static bool IsDead { get; private set; }
 
     [Header("Knockback Settings")]
-    [SerializeField] private float knockbackForce = 10f;
     [SerializeField] private float knockbackDuration = 0.2f;
     private bool isKnockedBack = false;
     private float knockbackTimer = 0f;
+
+    [Header("Sprite Render Settings")]
 
     public SpriteRenderer playerSpriteRenderer;  // 캐릭터의 SpriteRenderer
 

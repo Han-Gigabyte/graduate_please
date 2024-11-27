@@ -27,6 +27,11 @@ public class CharacterManager : MonoBehaviour
     public Text agilityText;
     public Text luckText;
 
+    [Header("Upgrade Buttons")]
+    public Button vitalityUpgradeButton; // Vitality 업그레이드 버튼
+    public Button powerUpgradeButton;     // Power 업그레이드 버튼
+    public Button agilityUpgradeButton;   // Agility 업그레이드 버튼
+    public Button luckUpgradeButton;      // Luck 업그레이드 버튼
 
     [Header("Buttons")]
     public Button characterButton1;
@@ -96,6 +101,8 @@ public class CharacterManager : MonoBehaviour
         character.level++; // 레벨 증가
         SaveCharacterStats(); // 변경된 레벨 저장
         LoadCharacter(currentCharacterIndex); // 캐릭터 정보 다시 로드
+
+        LoadUpgradePanel();
     }
 
     // Select 버튼 클릭
@@ -153,6 +160,28 @@ public class CharacterManager : MonoBehaviour
         agilityText.text = "AGI: " + character.agility;
         luckText.text = "LUK: " + character.luck;
         currentCharacterIndex = index;
+
+        // 레벨 값의 -1과 비교
+        int totalIncrease = character.vitality + character.power + character.agility + character.luck;
+
+        if (totalIncrease == character.level - 1)
+        {
+            // 모든 버튼 비활성화
+            vitalityUpgradeButton.interactable = false;
+            powerUpgradeButton.interactable = false;
+            agilityUpgradeButton.interactable = false;
+            luckUpgradeButton.interactable = false;
+        }
+        else if (totalIncrease < character.level - 1)
+        {
+            // 각 속성의 증가량이 5인 경우 해당 버튼 비활성화
+            vitalityUpgradeButton.interactable = character.vitality < 5;
+            powerUpgradeButton.interactable = character.power < 5;
+            agilityUpgradeButton.interactable = character.agility < 5;
+            luckUpgradeButton.interactable = character.luck < 5;
+        }
+
+        Debug.Log($"Total Increase: {totalIncrease}, Level: {character.level}, Vitality: {character.vitality}, Power: {character.power}, Agility: {character.agility}, Luck: {character.luck}");
     }
 
     public void ShowUpgradePanel()
@@ -172,6 +201,28 @@ public class CharacterManager : MonoBehaviour
         powerText.text = "POW: " + character.power;
         agilityText.text = "AGI: " + character.agility;
         luckText.text = "LUK: " + character.luck;
+
+        // 레벨 값의 -1과 비교
+        int totalIncrease = character.vitality + character.power + character.agility + character.luck;
+
+        if (totalIncrease == character.level - 1)
+        {
+            // 모든 버튼 비활성화
+            vitalityUpgradeButton.interactable = false;
+            powerUpgradeButton.interactable = false;
+            agilityUpgradeButton.interactable = false;
+            luckUpgradeButton.interactable = false;
+        }
+        else if (totalIncrease < character.level - 1)
+        {
+            // 각 속성의 증가량이 5인 경우 해당 버튼 비활성화
+            vitalityUpgradeButton.interactable = character.vitality < 5;
+            powerUpgradeButton.interactable = character.power < 5;
+            agilityUpgradeButton.interactable = character.agility < 5;
+            luckUpgradeButton.interactable = character.luck < 5;
+        }
+
+        Debug.Log($"Total Increase: {totalIncrease}, Level: {character.level}, Vitality: {character.vitality}, Power: {character.power}, Agility: {character.agility}, Luck: {character.luck}");
     }
 
     public void IncreaseVitality()
@@ -183,6 +234,8 @@ public class CharacterManager : MonoBehaviour
             vitalityText.text = "VIT: " + character.vitality;
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
+
+        LoadUpgradePanel();
     }
 
     public void IncreasePower()
@@ -194,6 +247,8 @@ public class CharacterManager : MonoBehaviour
             powerText.text = "POW: " + character.power;
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
+
+        LoadUpgradePanel();
     }
 
     public void IncreaseAgility()
@@ -205,6 +260,8 @@ public class CharacterManager : MonoBehaviour
             agilityText.text = "AGI: " + character.agility;
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
+
+        LoadUpgradePanel();
     }
 
     public void IncreaseLuck()
@@ -216,6 +273,8 @@ public class CharacterManager : MonoBehaviour
             luckText.text = "LUK: " + character.luck;
             SaveCharacterStats(); // 캐릭터 속성 저장
         }
+
+        LoadUpgradePanel();
     }
 
     public void CloseUpgradePanel()
