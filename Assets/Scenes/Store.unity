@@ -3632,7 +3632,7 @@ GameObject:
   - component: {fileID: 1029782625}
   m_Layer: 6
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6851,6 +6851,7 @@ MonoBehaviour:
   rangedEnemyProjectileSpeed: 8
   enemyProjectileKnockbackForce: 8
   playerUIPrefab: {fileID: 0}
+  playerSpriteRenderer: {fileID: 0}
 --- !u!1 &1805278630
 GameObject:
   m_ObjectHideFlags: 0
