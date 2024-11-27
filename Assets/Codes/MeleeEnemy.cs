@@ -14,11 +14,13 @@ public class MeleeEnemy : MonoBehaviour
     [Header("Collision")]
     public CompositeCollider2D compositeCollider;
 
-    [Header("Attack")]
-    private int attackDamage;
+    [Header("Damage")]
     private float knockbackForce;
     private float damageCooldown;
     private float nextDamageTime;
+    public int baseDamage = 10; // 기본 공격력
+    public DamageMultiplier damageMultiplier; // 공격력 비율을 위한 ScriptableObject
+    public int attackDamage;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -26,39 +28,49 @@ public class MeleeEnemy : MonoBehaviour
     private bool isGrounded;
     private bool isFacingRight = true;
 
+    [Header("Health")]
+    public float baseHealth = 100f; // 기본 체력
+    public HealthMultiplier healthMultiplier; // 체력 비율을 위한 ScriptableObject
+    public float calculatedHealth;
+
     void Start()
     {
         // GameManager에서 값 가져오기
         moveSpeed = GameManager.Instance.meleeEnemyMoveSpeed;
         detectionRange = GameManager.Instance.meleeEnemyDetectionRange;
-        attackDamage = GameManager.Instance.meleeEnemyDamage;
         knockbackForce = GameManager.Instance.meleeEnemyKnockbackForce;
         damageCooldown = GameManager.Instance.meleeEnemyDamageCooldown;
 
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        
+
+        // 체력과 공격력 초기화
+        float healthMultiplierValue = healthMultiplier.GetHealthMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter);
+        calculatedHealth = baseHealth * healthMultiplierValue;
+
+        attackDamage = Mathf.RoundToInt(baseDamage * damageMultiplier.GetDamageMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter));
+
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.gravityScale = 2.5f;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;  // 연속 충돌 감지 모드로 변경
-        
+
         // 기존 Collider는 물리적 충돌용으로 사용
         GetComponent<Collider2D>().isTrigger = false;
-        
+
         // 새로운 Trigger Collider 추가
         BoxCollider2D triggerCollider = gameObject.AddComponent<BoxCollider2D>();
         triggerCollider.isTrigger = true;
         // 기존 Collider와 같은 크기로 설정
         triggerCollider.size = GetComponent<BoxCollider2D>().size;
         triggerCollider.offset = GetComponent<BoxCollider2D>().offset;
-        
+
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        
+
         // 씬에 있는 모든 Enemy들과의 충돌을 무시
         RangedEnemy[] rangedEnemies = FindObjectsOfType<RangedEnemy>();
         MeleeEnemy[] meleeEnemies = FindObjectsOfType<MeleeEnemy>();
-        
+
         foreach (var enemy in meleeEnemies)
         {
             if (enemy != this)  // 자기 자신은 제외
@@ -66,7 +78,7 @@ public class MeleeEnemy : MonoBehaviour
                 Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemy.GetComponent<Collider2D>(), true);
             }
         }
-        
+
         foreach (var enemy in rangedEnemies)
         {
             Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemy.GetComponent<Collider2D>(), true);

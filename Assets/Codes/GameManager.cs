@@ -196,8 +196,4 @@ public class GameManager : MonoBehaviour
             player.transform.position = startPosition;
         }
     }
-    private void Start()
-    {
-        
-    }
 }
