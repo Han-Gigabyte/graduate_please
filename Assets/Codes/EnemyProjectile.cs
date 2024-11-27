@@ -10,6 +10,8 @@ public class EnemyProjectile : MonoBehaviour
 
     private Rigidbody2D rb;
     private Camera mainCamera;
+    private PoolManager poolManager;
+    private string poolKey;
 
     private void Awake()
     {
@@ -43,6 +45,12 @@ public class EnemyProjectile : MonoBehaviour
         // 투사체 회전 (발사 방향으로)
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
+
+    public void SetPoolManager(PoolManager manager, string key)
+    {
+        poolManager = manager;
+        poolKey = key;
     }
 
     private void Update()
@@ -82,6 +90,14 @@ public class EnemyProjectile : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, ((CircleCollider2D)col).radius);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (poolManager != null)
+        {
+            poolManager.ReturnObject(poolKey, gameObject);
         }
     }
 }

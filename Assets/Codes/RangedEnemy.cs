@@ -150,17 +150,23 @@ public class RangedEnemy : MonoBehaviour
         if (PlayerController.IsDead) return;
 
         GameObject projectile = PoolManager.Instance.GetObject(projectileKey);
-        if (projectile != null)
+        
+        // null 체크 추가
+        if (projectile == null)
         {
-            Vector3 spawnPosition = firePoint.position;
-            projectile.transform.position = spawnPosition;
+            Debug.LogError("발사체를 가져오는 데 실패했습니다.");
+            return;
+        }
 
-            EnemyProjectile projectileComponent = projectile.GetComponent<EnemyProjectile>();
-            if (projectileComponent != null)
-            {
-                Vector2 direction = (playerTransform.position - spawnPosition).normalized;
-                projectileComponent.Initialize(direction, projectileSpeed, attackDamage); // attackDamage로 변경
-            }
+        Vector3 spawnPosition = firePoint.position;
+        projectile.transform.position = spawnPosition;
+
+        EnemyProjectile projectileComponent = projectile.GetComponent<EnemyProjectile>();
+        if (projectileComponent != null)
+        {
+            Vector2 direction = (playerTransform.position - spawnPosition).normalized;
+            projectileComponent.Initialize(direction, projectileSpeed, attackDamage);
+            projectileComponent.SetPoolManager(PoolManager.Instance, projectileKey);
         }
     }
 

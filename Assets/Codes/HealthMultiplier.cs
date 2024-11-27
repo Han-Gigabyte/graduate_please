@@ -24,8 +24,8 @@ public class HealthMultiplier : ScriptableObject
     // 스테이지와 챕터에 따른 체력 비율을 반환하는 메서드
     public float GetHealthMultiplier(int stage, int chapter)
     {
-        float stageMultiplier = (stage < stageMultipliers.Length) ? stageMultipliers[stage] : baseHealthMultiplier;
-        float chapterMultiplier = (chapter < chapterMultipliers.Length) ? chapterMultipliers[chapter] : baseHealthMultiplier;
+        float stageMultiplier = stageMultipliers[stage];
+        float chapterMultiplier = chapterMultipliers[chapter];
 
         return stageMultiplier * chapterMultiplier;
     }

@@ -24,8 +24,8 @@ public class DamageMultiplier : ScriptableObject
     // 스테이지와 챕터에 따른 공격력 비율을 반환하는 메서드
     public float GetDamageMultiplier(int stage, int chapter)
     {
-        float stageMultiplier = (stage < stageMultipliers.Length) ? stageMultipliers[stage] : baseDamageMultiplier;
-        float chapterMultiplier = (chapter < chapterMultipliers.Length) ? chapterMultipliers[chapter] : baseDamageMultiplier;
+        float stageMultiplier = stageMultipliers[stage];
+        float chapterMultiplier = chapterMultipliers[chapter];
 
         return stageMultiplier * chapterMultiplier;
     }
