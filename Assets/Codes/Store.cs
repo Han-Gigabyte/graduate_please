@@ -6,6 +6,10 @@ public class Store : MonoBehaviour
 {
     public float interactionRange = 2f;
     public GameObject StoreWindow;
+    ItemListData itemList;
+    private void Start() {
+        itemList = new ItemListData();
+    }
 
     private void Update()
     {
@@ -17,6 +21,7 @@ public class Store : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log("포탈들어옴");
+        Debug.Log(itemList.items[0].name);
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.IsPlayerInRange = true;
