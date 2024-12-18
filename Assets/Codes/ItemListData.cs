@@ -7,8 +7,10 @@ public class ItemList
 {
     public int id;           // 아이템 고유 ID
     public string name;      // 아이템 이름
+    public Sprite ItemSprite; // 아이템 이미지
     public int price;        // 아이템 가격
     public string explaination;  // 아이템 설명
+    
 
     // 생성자
     public ItemList(int id, string name, int price, string explaination)
