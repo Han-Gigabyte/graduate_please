@@ -3,8 +3,16 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public PlayerItemData inventory = new PlayerItemData(); // 인벤토리 리스트
-
+    public PlayerItemData inventory; // 인벤토리 리스트
+    public static InventoryManager Instance { get; private set; }
+    void Awake(){
+        inventory = new PlayerItemData();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
     // 아이템 추가
     public void AddItem(int id, string name, int quantity)
     {
