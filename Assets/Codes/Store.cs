@@ -11,6 +11,7 @@ public class Store : MonoBehaviour
     ItemListData itemList;
     PlayerItemData inventory;
     List<int> selectedItem;
+    public List<Button> buttonList;
     //public Image item1image;
     public Text item1Name;
     public Text item1Cost;
@@ -22,11 +23,12 @@ public class Store : MonoBehaviour
     public Text item3Name;
     public Text item3Cost;
     public Text itemEx;
+    public Text nowMoney;
     
     private void Awake() {
         itemList = new ItemListData();
         selectedItem = new List<int>();
-        
+        nowMoney.text = "보유머니 : "+InventoryManager.Instance.inventory.money.ToString();
         int randomIndex;
         for (int i = 0; i < 3; i++)
         {
@@ -84,5 +86,17 @@ public class Store : MonoBehaviour
     }
     public void showItemEx(int buttonId){
         itemEx.text = itemList.items[selectedItem[buttonId]].explaination;
+    }
+    public void buyItem(int buyButtonId){
+        if(InventoryManager.Instance.inventory.money<itemList.items[selectedItem[buyButtonId]].price){
+            Debug.Log(InventoryManager.Instance.inventory.money);
+            Debug.Log("돈없음");
+        }
+        else{
+            InventoryManager.Instance.RemoveItem(5,itemList.items[selectedItem[buyButtonId]].price);
+            buttonList[buyButtonId].interactable =false;
+            InventoryManager.Instance.AddItem(7,itemList.items[selectedItem[buyButtonId]].id);
+            nowMoney.text = "보유머니 : "+InventoryManager.Instance.inventory.money.ToString();
+        }
     }
 }
