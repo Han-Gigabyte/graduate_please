@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - EnemyProjectile
   - Portal
+  - DroppedItem
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Enemy
   - PlayerPassthrough
   - EnemyProjectile
-  - 
+  - DroppedItem
   - 
   - 
   - 

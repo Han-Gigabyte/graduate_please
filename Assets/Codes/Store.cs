@@ -14,7 +14,7 @@ public class Store : MonoBehaviour
         
         for (int i = 0; i < 3; i++)
         {
-            int randomIndex = Random.Range(0, itemList.items.Count);
+            int randomIndex = Random.Range(0, ItemListData.items.Count);
             if(!inventroy.items.Exists(x => x == randomIndex)&&!selectedItem.Exists(x => x == randomIndex)){
                 selectedItem.Add(randomIndex);
                 continue;
@@ -33,7 +33,7 @@ public class Store : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log("포탈들어옴");
-        Debug.Log(itemList.items[0].name);
+        Debug.Log(ItemListData.items[0].name);
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.IsPlayerInRange = true;
