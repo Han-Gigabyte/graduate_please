@@ -25,8 +25,9 @@ public class InventoryManager : MonoBehaviour
         return "Unknown";
     }
 
+ 
     // 아이템 추가
-    public void AddItem(int id, string name, int quantity)
+    public void AddItem(int id, int quantity)
     {
         switch(id){
             case 0: //돌
@@ -44,6 +45,15 @@ public class InventoryManager : MonoBehaviour
             case 4: //금
             inventory.gold+=quantity;
             break; 
+            case 5: //돈
+            inventory.money+=quantity;
+            break;
+            case 6: //배터리
+            inventory.battery+=quantity;
+            break;
+            case 7: //새로운 아이템추가, 이경우 quaitiy가 아이템의 아이디
+            inventory.items.Add(quantity);
+            break;
         }
     
         Debug.Log($"Added {quantity} {name} to inventory.");
@@ -67,7 +77,13 @@ public void RemoveItem(int id, int quantity)
             break;
             case 4: //금
             inventory.gold-=quantity;
-            break; 
+            break;
+            case 5: //돈
+            inventory.money-=quantity;
+            break;
+            case 6: //배터리
+            inventory.battery-=quantity;
+            break;
         }
     }
     public void SaveInventory(){
