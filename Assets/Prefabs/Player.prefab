@@ -180,6 +180,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+<<<<<<< Updated upstream
 --- !u!114 &2240496510896567273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +201,5 @@ MonoBehaviour:
     gold: 0
     battery: 0
     items: 
+=======
+>>>>>>> Stashed changes
