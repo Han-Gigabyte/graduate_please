@@ -12,6 +12,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     private List<GameObject> mapPrefabs = new List<GameObject>();
     private List<GameObject> currentMapSections = new List<GameObject>();
+    private List<GameObject> droppedItems = new List<GameObject>();
 
     private void Awake()
     {
