@@ -7,7 +7,7 @@ public class Store : MonoBehaviour
     public float interactionRange = 2f;
     public GameObject StoreWindow;
     ItemListData itemList;
-    PlayerItemData inventroy;
+    PlayerItemData inventory;
     List<int> selectedItem = new List<int>();
     private void Start() {
         itemList = new ItemListData();
@@ -15,7 +15,7 @@ public class Store : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             int randomIndex = Random.Range(0, ItemListData.items.Count);
-            if(!inventroy.items.Exists(x => x == randomIndex)&&!selectedItem.Exists(x => x == randomIndex)){
+            if(!inventory.items.Exists(x => x == randomIndex)&&!selectedItem.Exists(x => x == randomIndex)){
                 selectedItem.Add(randomIndex);
                 continue;
             }

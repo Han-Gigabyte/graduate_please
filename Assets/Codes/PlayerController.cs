@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public SpriteRenderer playerSpriteRenderer;  // 캐릭터의 SpriteRenderer
 
-
     void Start()
     {
         // GameManager에서 설정값 가져오기

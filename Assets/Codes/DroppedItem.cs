@@ -4,33 +4,16 @@ using UnityEngine;
 
 public class DroppedItem : MonoBehaviour
 {
-    private int itemId;
-    private string itemName;
-    private int quantity = 1; // 기본 수량
+    public int itemId;        // 아이템 ID
+    public string itemName;   // 아이템 이름
+    public int quantity;      // 아이템 개수
 
-    public void Initialize(int id, string name)
+    public void Initialize(int id, int quantity, PlayerItemData playerItemData)
     {
-        itemId = id;
-        itemName = name;
-
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log($"Collision detected with: {collision.name}");
-
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("Player collided with dropped item!");
-            // 인벤토리에 아이템 추가
-            InventoryManager inventoryManager = collision.GetComponent<InventoryManager>();
-            if (inventoryManager != null)
-            {
-                inventoryManager.AddItem(itemId, itemName, quantity);
-            }
-
-            // 아이템 제거
-            Destroy(gameObject);
-        }
+        this.itemId = id;
+        this.quantity = quantity;
+        this.itemName = playerItemData.GetItemNameById(id); // ID를 기반으로 이름 설정
+        Debug.Log($"Dropped Item Initialized: ID = {itemId}, Name = {itemName}, Quantity = {quantity}");
     }
 }
+

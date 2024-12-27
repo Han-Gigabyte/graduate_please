@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3935791310477584813}
   - component: {fileID: 604835820959203328}
   - component: {fileID: 4324448308151928959}
-  - component: {fileID: -8586834794506140861}
+  - component: {fileID: -8303161589964035774}
+  - component: {fileID: 5848838568926022785}
   m_Layer: 10
   m_Name: ItemPrefabs
   m_TagString: DroppedItem
@@ -159,7 +160,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-8586834794506140861
+--- !u!114 &-8303161589964035774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8044234074128147666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d9bba4735234ef9a559ed729d6a641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5848838568926022785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,3 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8966ece99780d48e7a781dbf33beac76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemId: 0
+  itemName: 
+  quantity: 0

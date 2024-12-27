@@ -168,30 +168,24 @@ public class MeleeEnemy : MonoBehaviour
         spriteRenderer.flipX = !isFacingRight;
     }
 
-    void DropItem()
+    public void DropItem()
     {
-        string itemName = inventoryManager.GetItemNameById(0);
-        if (inventoryManager == null) return;
+        // 랜덤으로 아이템 ID 생성 (0 ~ 4)
+        int randomItemId = Random.Range(0, 5);
+        int quantity = 1; // 드랍 개수 설정
 
-        // 랜덤 ID 생성 (0~4 중 하나)
-        int randomId = Random.Range(0, 5);
+        // 아이템 드랍
+        GameObject droppedItem = Instantiate(itemPrefab, transform.position, Quaternion.identity);
 
-        // 드랍 위치
-        Vector3 dropPosition = transform.position;
-
-        // 아이템 생성
-        GameObject droppedItem = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
-
-        // 아이템 초기화
-        DroppedItem itemComponent = droppedItem.GetComponent<DroppedItem>();
-        if (itemComponent != null)
+        // DroppedItemBehavior에 데이터 설정
+        DroppedItem itemBehavior = droppedItem.GetComponent<DroppedItem>();
+        if (itemBehavior != null)
         {
-            itemName = inventoryManager.GetItemNameById(randomId); // ID에 따른 이름
-            itemComponent.Initialize(randomId, itemName);
+            itemBehavior.itemId = randomItemId;
+            itemBehavior.quantity = quantity;
         }
-
-        Debug.Log($"Dropped {itemName} at {dropPosition}");
     }
+
 
     // 디버그용 시각화
     void OnDrawGizmosSelected()
