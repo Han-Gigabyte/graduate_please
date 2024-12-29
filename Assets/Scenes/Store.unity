@@ -204,7 +204,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 48305087}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: sellItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &48305087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,7 +420,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1714634569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.8, y: 0}
+  m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1398,7 +1410,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 191537863}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: buyItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &191537863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1496,11 +1520,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 97
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2247,7 +2271,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 475160856}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: sellItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &475160856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2298,7 +2334,7 @@ GameObject:
   - component: {fileID: 525170650}
   - component: {fileID: 525170649}
   m_Layer: 5
-  m_Name: ChangeRate (2)
+  m_Name: ChangeRate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2318,7 +2354,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2107699621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.8, y: 0}
+  m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -2424,11 +2460,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2942,10 +2978,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory:
     stone: 0
+    stonePrice: 3
     tree: 0
+    treePrice: 17
     skin: 0
+    skinPrice: 50
     steel: 0
+    steelPrice: 95
     gold: 0
+    goldPrice: 165
+    money: 99999
     battery: 0
     items: 
 --- !u!4 &783172007
@@ -3313,7 +3355,7 @@ GameObject:
   - component: {fileID: 860647678}
   - component: {fileID: 860647677}
   m_Layer: 5
-  m_Name: ChangeRate (1)
+  m_Name: ChangeRate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3333,7 +3375,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 848306733}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.8, y: 0}
+  m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -3634,6 +3676,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionRange: 2
   StoreWindow: {fileID: 1396714443}
+  buttonList:
+  - {fileID: 1627009450}
+  - {fileID: 1315362293}
+  - {fileID: 191537862}
   item1Name: {fileID: 1549296294}
   item1Cost: {fileID: 78920298}
   item2Name: {fileID: 893060679}
@@ -3641,6 +3687,30 @@ MonoBehaviour:
   item3Name: {fileID: 599091994}
   item3Cost: {fileID: 444622450}
   itemEx: {fileID: 1372067449}
+  nowMoney: {fileID: 794966312}
+  Stone: {fileID: 247124600}
+  Tree: {fileID: 1000161263}
+  Skin: {fileID: 1389338991}
+  Steel: {fileID: 1805278632}
+  Gold: {fileID: 1366710472}
+  prePriceData:
+  - {fileID: 1238408284}
+  - {fileID: 1099401220}
+  - {fileID: 1220129354}
+  - {fileID: 214232469}
+  - {fileID: 1357456149}
+  nowPriceData:
+  - {fileID: 2053259386}
+  - {fileID: 1003516687}
+  - {fileID: 538657232}
+  - {fileID: 2050863349}
+  - {fileID: 2042972447}
+  changeRate:
+  - {fileID: 68862170}
+  - {fileID: 860647677}
+  - {fileID: 525170649}
+  - {fileID: 1038992644}
+  - {fileID: 2093849134}
 --- !u!61 &956698693
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3824,11 +3894,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4444,7 +4514,7 @@ GameObject:
   - component: {fileID: 1038992645}
   - component: {fileID: 1038992644}
   m_Layer: 5
-  m_Name: ChangeRate (3)
+  m_Name: ChangeRate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4464,7 +4534,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1462238649}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.8, y: 0}
+  m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -4801,11 +4871,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 97
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -5063,11 +5133,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 97
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -5142,9 +5212,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 97
     m_Alignment: 0
@@ -5321,7 +5391,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1315362294}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: buyItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1315362294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5419,12 +5501,12 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 35
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 97
-    m_Alignment: 4
+    m_MaxSize: 300
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -5845,7 +5927,7 @@ GameObject:
   - component: {fileID: 1462238651}
   - component: {fileID: 1462238650}
   m_Layer: 5
-  m_Name: Steal
+  m_Name: Steel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6726,7 +6808,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1627009451}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: buyItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1627009451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7213,7 +7307,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1795797107}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: sellItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1795797107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7901,7 +8007,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2010790337}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: sellItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2010790337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7999,11 +8117,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -8101,7 +8219,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2043265377}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956698692}
+        m_TargetAssemblyTypeName: Store, Assembly-CSharp
+        m_MethodName: sellItem
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2043265377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8199,11 +8329,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -8278,9 +8408,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fa0e34514e0656b45a4c6543369b1983, type: 3}
-    m_FontSize: 10
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
@@ -8310,7 +8440,7 @@ GameObject:
   - component: {fileID: 2093849135}
   - component: {fileID: 2093849134}
   m_Layer: 5
-  m_Name: ChangeRate (4)
+  m_Name: ChangeRate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8330,10 +8460,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1457790315}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.8, y: 0}
+  m_AnchorMin: {x: 0.7, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0.000015258789, y: -0.000030517578}
+  m_SizeDelta: {x: 0, y: -0.000030517578}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2093849134
 MonoBehaviour:
