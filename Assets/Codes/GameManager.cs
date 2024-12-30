@@ -67,6 +67,12 @@ public class GameManager : MonoBehaviour
     public GameObject playerUIPrefab; // PlayerUI 프리팹을 위한 변수
     public SpriteRenderer playerSpriteRenderer; // 게임 캐릭터의 SpriteRenderer
 
+    // 새로운 기능: 현재 선택된 캐릭터 데이터
+    public CharacterData CurrentCharacter { get; private set; }
+    private SkillManager skillManager;
+    private int currentHealth;
+    private int maxHealth;
+    private float[] skillCooldownTimers;
 
     private void Awake()
     {
@@ -75,10 +81,55 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             InitializeGameState();
+
+            // SkillManager 컴포넌트 추가
+            skillManager = gameObject.AddComponent<SkillManager>();
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        maxHealth = CurrentCharacter != null ? CurrentCharacter.maxHealth : 100;
+        currentHealth = maxHealth;
+        skillCooldownTimers = new float[4];
+    }
+
+    private void Update()
+    {
+        // 스킬 쿨타임 타이머 업데이트
+        for (int i = 0; i < skillCooldownTimers.Length; i++)
+        {
+            if (skillCooldownTimers[i] > 0)
+            {
+                skillCooldownTimers[i] -= Time.deltaTime;
+            }
+        }
+
+        // 키 입력 감지 및 스킬 사용
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            UseSkill(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            UseSkill(1);
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            UseSkill(2);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            UseSkill(3);
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            // 현재 선택된 캐릭터의 이름과 스킬 출력
+            LogCurrentCharacterInfo();
         }
     }
 
@@ -87,6 +138,7 @@ public class GameManager : MonoBehaviour
         chapter = 1;
         stage = 1;
         score = 0;
+        
         isPlayerInRange = false;
         currentPlayerHealth = playerMaxHealth;
     }
@@ -158,8 +210,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextStage()
     {
-        SavePlayerState();  // 현재 플레이어 상태 저장
-        AdvanceStage();     // 스테이지 증가
+        AdvanceStage();     // 스테이지 증가 및 플레이어 상태 저장
 
         // 현재 씬에서 새로운 스테이지 생성
         MapManager.Instance.GenerateStage();
@@ -194,6 +245,134 @@ public class GameManager : MonoBehaviour
             // 맵의 왼쪽 시작 지점으로 플레이어 이동
             Vector3 startPosition = MapManager.Instance.GetStartPosition();
             player.transform.position = startPosition;
+        }
+    }
+
+    // 새로운 메서드: 현재 캐릭터 설정
+    public void SetCurrentCharacter(CharacterData character)
+    {
+        CurrentCharacter = character;
+    }
+
+    private void UseSkill(int skillIndex)
+    {
+        if (CurrentCharacter == null)
+        {
+            Debug.LogWarning("CurrentCharacter is not set!");
+            return;
+        }
+
+        if (CurrentCharacter.skills == null || skillIndex < 0 || skillIndex >= CurrentCharacter.skills.Length)
+        {
+            Debug.LogWarning("Invalid skill index or skills array is not initialized!");
+            return;
+        }
+
+        CharacterSkill skill = CurrentCharacter.skills[skillIndex];
+
+        if (skill == null)
+        {
+            Debug.LogWarning("Skill is null!");
+            return;
+        }
+
+        skillManager.UseSkill(skill, transform);
+    }
+
+    public void ModifyHealth(int amount)
+    {
+        // 현재 체력을 업데이트
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        Debug.Log($"Current health after healing: {currentHealth}");
+
+        // PlayerController의 currentHealth 업데이트
+        PlayerController playerController = FindObjectOfType<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.UpdateHealth(currentHealth); // PlayerController의 메서드 호출
+        }
+    }
+
+    public int MaxHealth => maxHealth;
+
+    public int GetCurrentMaxHealth()
+    {
+        return CurrentCharacter != null ? CurrentCharacter.maxHealth : 100; // 기본값 100
+    }
+
+    private void LogCurrentCharacterInfo()
+    {
+        if (CurrentCharacter != null)
+        {
+            Debug.Log($"Current Character: {CurrentCharacter.characterName}");
+
+            if (CurrentCharacter.skills != null && CurrentCharacter.skills.Length > 0)
+            {
+                foreach (var skill in CurrentCharacter.skills)
+                {
+                    if (skill != null)
+                    {
+                        Debug.Log($"Loaded Skill: {skill.skillName}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Skill is null!");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No skills found for this character.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No character is currently selected.");
+        }
+    }
+
+    private void LoadCurrentCharacterInfo()
+    {
+        if (CurrentCharacter != null)
+        {
+            Debug.Log($"Current Character: {CurrentCharacter.characterName}");
+
+            if (CurrentCharacter.skills != null && CurrentCharacter.skills.Length > 0)
+            {
+                foreach (var skill in CurrentCharacter.skills)
+                {
+                    if (skill != null)
+                    {
+                        Debug.Log($"Loaded Skill: {skill.skillName}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Skill is null!");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No skills found for this character.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No character is currently selected.");
+        }
+    }
+
+    public void LoadSelectedCharacter()
+    {
+        // 선택된 캐릭터의 데이터 로드
+        if (CharacterSelectionData.Instance != null && CharacterSelectionData.Instance.selectedCharacterData != null)
+        {
+            Debug.Log("Loading selected character data...");
+            CurrentCharacter = CharacterSelectionData.Instance.selectedCharacterData; // 선택된 캐릭터 데이터 로드
+        }
+        else
+        {
+            Debug.LogWarning("No character data found in CharacterSelectionData.");
         }
     }
 }

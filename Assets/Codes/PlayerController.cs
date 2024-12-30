@@ -448,5 +448,11 @@ public class PlayerController : MonoBehaviour, IDamageable
             playerUI.SetPlayer(this); // PlayerUI에 플레이어를 설정하여 슬라이더 업데이트
         }
     }
+
+    public void UpdateHealth(int newHealth)
+    {
+        currentHealth = newHealth;
+        Debug.Log($"Player health updated to: {currentHealth}");
+    }
 }
 

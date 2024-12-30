@@ -20,3 +20,9 @@ MonoBehaviour:
   power: 0
   agility: 0
   luck: 0
+  maxHealth: 1
+  skills:
+  - {fileID: 11400000, guid: 3c97aaea11d7c6b4e9767c208a8464d1, type: 2}
+  - {fileID: 11400000, guid: 628190d9ba3619642937626803a6982f, type: 2}
+  - {fileID: 11400000, guid: e13d77a48b365364cad83f3feb0f3ccb, type: 2}
+  - {fileID: 0}
