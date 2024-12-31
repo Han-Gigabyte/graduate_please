@@ -281,15 +281,16 @@ public class GameManager : MonoBehaviour
 
     public void ModifyHealth(int amount)
     {
+        Debug.Log($"Current health: {currentPlayerHealth}");
         // 현재 체력을 업데이트
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        Debug.Log($"Current health after healing: {currentHealth}");
+        currentPlayerHealth = Mathf.Min(currentPlayerHealth + amount, maxHealth);
+        Debug.Log($"Current health after healing: {currentPlayerHealth}");
 
-        // PlayerController의 currentHealth 업데이트
+        // PlayerController의 currentPlayerHealth 업데이트
         PlayerController playerController = FindObjectOfType<PlayerController>();
         if (playerController != null)
         {
-            playerController.UpdateHealth(currentHealth); // PlayerController의 메서드 호출
+            playerController.UpdateHealth(currentPlayerHealth); // PlayerController의 메서드 호출
         }
     }
 
