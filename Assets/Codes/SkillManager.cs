@@ -18,16 +18,7 @@ public class SkillManager : MonoBehaviour
 
     public void UseSkill(CharacterSkill skill, Transform characterTransform)
     {
-        if (skill == null)
-        {
-            Debug.LogWarning("Skill is null!");
-            return;
-        }
-
-        // 스킬 사용 로직
         Debug.Log($"Using skill: {skill.skillName} with damage: {skill.skillDamage} or effect value: {skill.effectValue}");
-
-        // 스킬 효과 적용
         ApplySkillEffect(skill, characterTransform);
     }
 

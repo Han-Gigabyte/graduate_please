@@ -254,7 +254,7 @@ public class GameManager : MonoBehaviour
         CurrentCharacter = character;
     }
 
-    private void UseSkill(int skillIndex)
+    public void UseSkill(int skillIndex)
     {
         if (CurrentCharacter == null)
         {
@@ -276,7 +276,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        skillManager.UseSkill(skill, transform);
+        // 쿨타임 체크
+        if (skillCooldownTimers[skillIndex] > 0)
+        {
+            Debug.LogWarning($"Skill {skill.skillName} is on cooldown for {skillCooldownTimers[skillIndex]:F1} more seconds.");
+            return; // 쿨타임이 남아있으면 사용하지 않음
+        }
+
+        skillManager.UseSkill(skill, transform); // 스킬 사용
+        skillCooldownTimers[skillIndex] = skill.skillCooldown; // 쿨타임 설정
     }
 
     public void ModifyHealth(int amount)
