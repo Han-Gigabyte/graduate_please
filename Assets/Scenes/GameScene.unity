@@ -469,7 +469,7 @@ MonoBehaviour:
   targetTilemap: {fileID: 952985895}
   stagePortalPrefab: {fileID: 2840797550389458792, guid: d31b5b152aae4ad41a45c6d3ec2a2904, type: 3}
   groundPrefab: {fileID: 8379742428021713048, guid: ac15d7c3c2979c949be5a1f6af9d274b, type: 3}
-  playerPrefab: {fileID: 8962749516033509532, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
+  playerPrefab: {fileID: 8962749516033509532, guid: 4409161bf95071a41bb0364faa83899f, type: 3}
 --- !u!4 &951659765
 Transform:
   m_ObjectHideFlags: 0

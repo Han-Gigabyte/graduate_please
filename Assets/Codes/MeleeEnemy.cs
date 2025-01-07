@@ -91,12 +91,13 @@ public class MeleeEnemy : MonoBehaviour
 
     private void Awake()
     {
-        // InventoryManager 참조
-        inventoryManager = FindObjectOfType<InventoryManager>();
-        if (inventoryManager == null)
+        if (InventoryManager.Instance == null)
         {
             Debug.LogError("InventoryManager not found in the scene.");
+            return; // InventoryManager가 없으면 메서드 종료
         }
+
+        // InventoryManager가 존재할 때의 로직
     }
 
     void Update()
