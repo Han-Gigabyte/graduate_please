@@ -6,7 +6,8 @@ public class CharacterSelectionData : MonoBehaviour
 {
     public static CharacterSelectionData Instance { get; private set; }
 
-    public Sprite selectedCharacterSprite; // 선택된 캐릭터의 스프라이트 저장
+    public Sprite selectedCharacterSprite; // 선택된 캐릭터의 스프라이트
+    public CharacterData selectedCharacterData; // 선택된 캐릭터의 데이터
 
     private void Awake()
     {
@@ -14,9 +15,6 @@ public class CharacterSelectionData : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject); // 씬 전환 시 오브젝트 유지
-
-            // 초기값 설정: 첫 번째 캐릭터의 스프라이트를 기본값으로 사용
-            SetDefaultCharacterSprite();
         }
         else
         {
@@ -24,19 +22,35 @@ public class CharacterSelectionData : MonoBehaviour
         }
     }
 
-    private void SetDefaultCharacterSprite()
+    private void Start()
     {
-        // CharacterManager에서 데이터를 가져옴
-        CharacterManager characterManager = FindObjectOfType<CharacterManager>();
+        StartCoroutine(WaitForCharacterManager());
+    }
 
-        if (characterManager != null && characterManager.characters.Length > 0)
+    private IEnumerator WaitForCharacterManager()
+    {
+        // CharacterManager가 준비될 때까지 대기
+        CharacterManager characterManager = null;
+        while (characterManager == null)
+        {
+            characterManager = FindObjectOfType<CharacterManager>();
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        // CharacterManager가 준비되면 스프라이트 설정
+        SetDefaultCharacterSprite(characterManager);
+    }
+
+    public void SetDefaultCharacterSprite(CharacterManager characterManager)
+    {
+        if (characterManager.characters.Length > 0)
         {
             selectedCharacterSprite = characterManager.characters[0].characterSprite;
             Debug.Log("Default character sprite set to: " + selectedCharacterSprite.name);
         }
         else
         {
-            Debug.LogWarning("CharacterManager not found or no characters available!");
+            Debug.LogWarning("No characters available in CharacterManager!");
         }
     }
 }

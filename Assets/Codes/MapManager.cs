@@ -28,9 +28,13 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        // GameManager의 LoadSelectedCharacter 메서드 호출
+        GameManager.Instance.LoadSelectedCharacter();
+
         LoadMapPrefabs();
         GenerateStage();
         SpawnInitialEntities();
+        
     }
 
     private void LoadMapPrefabs()

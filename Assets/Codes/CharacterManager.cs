@@ -8,11 +8,15 @@ using UnityEngine.SceneManagement;
 public class CharacterManager : MonoBehaviour
 {
     [Header("Character Data Info")]
-    public CharacterData[] characters;        // 캐릭터 데이터 배열
+    public CharacterData[] characters;        // 모든 캐릭터 데이터 배열
+    private string[] characterNames = { "Character1", "Gyeonu", "Character3", "Character4", "Character5", "Character6", "Character7" }; // 캐릭터 이름 배열
     public Image characterImage;              // 캐릭터 이미지
     public Text characterNameText;            // 캐릭터 이름 텍스트
     public Text descriptionText;              // 캐릭터 설명 텍스트
     public Text levelText;                    // 캐릭터 레벨 텍스트
+
+    // 현재 선택된 캐릭터의 스프라이트를 저장할 변수
+    private Sprite characterSprite;
 
     [Header("Panel Info")]
     public GameObject characterInfoPanel;     // 캐릭터 정보 패널
@@ -47,26 +51,29 @@ public class CharacterManager : MonoBehaviour
     public Button closeUpgradeButton;         // 업그레이드 창 닫기 버튼
 
     private int currentCharacterIndex = 0;
+    private float[] skillCooldownTimers; // 스킬 쿨타임 타이머
+
+    private SkillManager skillManager;
+    private int currentHealth;
+    private int maxHealth;
+
+    // 각 캐릭터의 최대 체력을 저장하는 배열
+    private int[] maxHealthArray = new int[7] { 100, 120, 110, 130, 140, 150, 160 };
 
     private void Start()
     {
-        Debug.Log("Characters array length: " + characters.Length);
-
         characterInfoPanel.SetActive(false);
         upgradePanel.SetActive(false);
 
-        // 캐릭터 데이터 초기화
-        foreach (var character in characters)
+        // 캐릭터 데이터가 올바르게 로드되었는지 확인
+        if (characters == null || characters.Length == 0)
         {
-            // PlayerPrefs에서 레벨 및 속성 불러오기
-            int savedLevel = PlayerPrefs.GetInt("CharacterLevel_" + Array.IndexOf(characters, character), 1); // 기본값 1
-            character.level = savedLevel; // 저장된 레벨로 초기화
-
-            character.vitality = PlayerPrefs.GetInt("CharacterVitality_" + Array.IndexOf(characters, character), 0); // 기본값 0
-            character.power = PlayerPrefs.GetInt("CharacterPower_" + Array.IndexOf(characters, character), 0); // 기본값 0
-            character.agility = PlayerPrefs.GetInt("CharacterAgility_" + Array.IndexOf(characters, character), 0); // 기본값 0
-            character.luck = PlayerPrefs.GetInt("CharacterLuck_" + Array.IndexOf(characters, character), 0); // 기본값 0
+            Debug.LogError("No character data found!");
+            return;
         }
+
+        // 초기 캐릭터 로드
+        LoadCharacter(0);
 
         // 버튼 리스너 설정
         characterButton1.onClick.AddListener(() => ShowCharacterInfo(0));
@@ -84,14 +91,80 @@ public class CharacterManager : MonoBehaviour
 
         closeUpgradeButton.onClick.AddListener(CloseUpgradePanel); // 업그레이드 창 닫기 버튼에 이벤트 추가
 
+        // CharacterSelectionData에 스프라이트 설정 요청
+        CharacterSelectionData.Instance.SetDefaultCharacterSprite(this);
+
+        // 스킬 쿨타임 타이머 초기화
+        skillCooldownTimers = new float[4];
+
+        // SkillManager를 GameObject에 추가
+        skillManager = gameObject.AddComponent<SkillManager>();
+
+        maxHealth = GameManager.Instance.GetCurrentMaxHealth();
+        currentHealth = maxHealth;
+
+        // GameManager에 현재 캐릭터 설정
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetCurrentCharacter(characters[currentCharacterIndex]);
+        }
     }
 
     private void Update()
     {
         // 키보드의 `키`를 눌렀을 때 현재 선택된 캐릭터의 레벨을 증가
-        if (Input.GetKeyDown(KeyCode.BackQuote)) // `키는 BackQuote로 표현
+        if (Input.GetKeyDown(KeyCode.BackQuote)) IncreaseCharacterLevel(); // `키는 BackQuote로 표현
+        // 스킬 쿨타임 타이머 업데이트
+        for (int i = 0; i < skillCooldownTimers.Length; i++)
         {
-            IncreaseCharacterLevel();
+            if (skillCooldownTimers[i] > 0)
+            {
+                skillCooldownTimers[i] -= Time.deltaTime;
+            }
+        }
+
+        // 키 입력 감지 및 스킬 사용
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            UseSkill(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            UseSkill(1);
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            UseSkill(2);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            UseSkill(3);
+        }
+    }
+
+    private void UseSkill(int skillIndex)
+    {
+        CharacterData character = GameManager.Instance.CurrentCharacter;
+        if (character.skills != null && skillIndex >= 0 && skillIndex < character.skills.Length)
+        {
+            CharacterSkill skill = character.skills[skillIndex];
+
+            // 스킬 쿨타임 확인
+            if (skillCooldownTimers[skillIndex] <= 0)
+            {
+                skillManager.UseSkill(skill, transform);
+
+                // 쿨타임 설정
+                skillCooldownTimers[skillIndex] = skill.skillCooldown;
+            }
+            else
+            {
+                Debug.Log($"Skill {skill.skillName} is on cooldown for {skillCooldownTimers[skillIndex]:F1} more seconds.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Invalid skill index!");
         }
     }
 
@@ -110,13 +183,32 @@ public class CharacterManager : MonoBehaviour
     {
         // 선택된 캐릭터의 데이터를 CharacterSelectionData에 저장
         CharacterData selectedCharacter = characters[currentCharacterIndex];
-        CharacterSelectionData.Instance.selectedCharacterSprite = selectedCharacter.characterSprite;
+        if (selectedCharacter == null)
+        {
+            Debug.LogError("Selected character is null!");
+            return; // 캐릭터가 null인 경우 메서드 종료
+        }
 
-        // 게임 씬으로 이동
+        if (characterImage.sprite == null)
+        {
+            Debug.LogError("Selected character sprite is missing!"); // 스프라이트가 null인 경우 오류 로그
+            return; // 스프라이트가 null인 경우 메서드 종료
+        }
+
+        CharacterSelectionData.Instance.selectedCharacterSprite = characterImage.sprite;
+        CharacterSelectionData.Instance.selectedCharacterData = selectedCharacter; // 선택된 캐릭터 데이터 저장
         SceneManager.LoadScene("GameScene");
     }
 
-
+    private void UseCharacterSkills(CharacterData character)
+    {
+        foreach (var skill in character.skills)
+        {
+            // 각 스킬 사용 로직
+            Debug.Log($"Using skill: {skill.skillName} with damage: {skill.skillDamage}");
+            // 여기서 각 스킬을 실제로 사용하는 로직을 구현할 수 있습니다.
+        }
+    }
 
     public void ShowCharacterInfo(int index)
     {
@@ -146,7 +238,33 @@ public class CharacterManager : MonoBehaviour
 
     public void LoadCharacter(int index)
     {
+        if (index < 0 || index >= characters.Length)
+        {
+            Debug.LogError("Character index out of range!");
+            return;
+        }
+
+        currentCharacterIndex = index;
         CharacterData character = characters[index];
+
+        if (character == null)
+        {
+            Debug.LogError("CharacterData is null for index: " + index);
+            return;
+        }
+
+        // PlayerPrefs에서 캐릭터 속성 로드
+        character.maxHealth = 
+        character.level = PlayerPrefs.GetInt("CharacterLevel_" + currentCharacterIndex, 1);
+        character.vitality = PlayerPrefs.GetInt("CharacterVitality_" + currentCharacterIndex, 0);
+        character.power = PlayerPrefs.GetInt("CharacterPower_" + currentCharacterIndex, 0);
+        character.agility = PlayerPrefs.GetInt("CharacterAgility_" + currentCharacterIndex, 0);
+        character.luck = PlayerPrefs.GetInt("CharacterLuck_" + currentCharacterIndex, 0);
+
+        // 스킬 로드
+        LoadCharacterSkills(character);
+
+        CharacterSelectionData.Instance.selectedCharacterSprite = character.characterSprite;
         characterImage.sprite = character.characterSprite;
         characterNameText.text = character.characterName;
         descriptionText.text = character.description;
@@ -184,6 +302,28 @@ public class CharacterManager : MonoBehaviour
         Debug.Log($"Total Increase: {totalIncrease}, Level: {character.level}, Vitality: {character.vitality}, Power: {character.power}, Agility: {character.agility}, Luck: {character.luck}");
     }
 
+    private void LoadCharacterSkills(CharacterData character)
+    {
+        if (character.skills != null && character.skills.Length > 0)
+        {
+            foreach (var skill in character.skills)
+            {
+                if (skill == null || skill.skillName == "none") // 스킬이 null이거나 "none"인 경우
+                {
+                    Debug.LogWarning("Skill is null or not implemented, setting to null.");
+                    // 스킬을 null로 설정
+                    continue; // 다음 스킬로 넘어감
+                }
+
+                Debug.Log($"Loaded skill: {skill.skillName}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No skills found for this character.");
+        }
+    }
+
     public void ShowUpgradePanel()
     {
         characterInfoPanel.SetActive(false); // 캐릭터 정보 창 숨기기
@@ -193,7 +333,32 @@ public class CharacterManager : MonoBehaviour
 
     public void LoadUpgradePanel()
     {
+        Debug.Log($"Current Character Index: {currentCharacterIndex}");
+        Debug.Log($"Characters Array Length: {characters.Length}");
+
+        if (currentCharacterIndex < 0 || currentCharacterIndex >= characters.Length)
+        {
+            Debug.LogError("Current character index is out of bounds!");
+            return;
+        }
+
         CharacterData character = characters[currentCharacterIndex];
+
+        if (character == null)
+        {
+            Debug.LogError("Character data is null!");
+            return;
+        }
+
+        // UI 요소가 null인지 확인
+        if (upgradeCharacterImage == null || upgradeNameText == null || upgradeLevelText == null ||
+            vitalityText == null || powerText == null || agilityText == null || luckText == null)
+        {
+            Debug.LogError("One or more UI elements are not assigned!");
+            return;
+        }
+
+        // 캐릭터 정보 로드
         upgradeCharacterImage.sprite = character.characterSprite;
         upgradeNameText.text = character.characterName;
         upgradeLevelText.text = "Level: " + character.level;
@@ -296,5 +461,48 @@ public class CharacterManager : MonoBehaviour
         PlayerPrefs.Save(); // 변경 사항 저장
     }
 
-    
+    /*private void SetCharacterSkills(CharacterData character)
+    {
+        if (character.characterName == "Gyeonu")
+        {
+            character.skills = new CharacterSkill[4];
+
+            character.skills[0] = new CharacterSkill
+            {
+                skillName = "Fireball",
+                skillDamage = 20,
+                skillCooldown = 5,
+                effectRadius = 3.0f,
+                effectType = CharacterSkill.EffectType.Damage,
+                effectValue = 20
+            };
+
+            character.skills[1] = new CharacterSkill
+            {
+                skillName = "Heal",
+                skillDamage = 0,
+                skillCooldown = 10,
+                effectType = CharacterSkill.EffectType.Heal,
+                effectValue = 15
+            };
+
+            character.skills[2] = new CharacterSkill
+            {
+                skillName = "Speed Boost",
+                skillDamage = 0,
+                skillCooldown = 8,
+                effectType = CharacterSkill.EffectType.Buff,
+                effectValue = 5
+            };
+
+            character.skills[3] = new CharacterSkill
+            {
+                skillName = "Poison",
+                skillDamage = 10,
+                skillCooldown = 6,
+                effectType = CharacterSkill.EffectType.Debuff,
+                effectValue = 10
+            };
+        }
+    }*/
 }
