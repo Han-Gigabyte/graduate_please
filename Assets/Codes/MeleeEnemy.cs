@@ -97,7 +97,7 @@ public class MeleeEnemy : MonoBehaviour
             return; // InventoryManager가 없으면 메서드 종료
         }
 
-        // InventoryManager가 존재할 때의 로직
+        inventoryManager = InventoryManager.Instance; // inventoryManager 초기화
     }
 
     void Update()
@@ -171,9 +171,20 @@ public class MeleeEnemy : MonoBehaviour
 
     void DropItem()
     {
-        string itemName = inventoryManager.GetItemNameById(0);
-        if (inventoryManager == null) return;
+        if (inventoryManager == null)
+        {
+            Debug.LogError("InventoryManager is not initialized.");
+            return; // inventoryManager가 null이면 메서드 종료
+        }
 
+        if (itemPrefab == null)
+        {
+            Debug.LogError("Item prefab is not assigned.");
+            return; // itemPrefab이 null이면 �서드 종료
+        }
+
+        string itemName = inventoryManager.GetItemNameById(0);
+        
         // 랜덤 ID 생성 (0~4 중 하나)
         int randomId = Random.Range(0, 5);
 
@@ -189,6 +200,10 @@ public class MeleeEnemy : MonoBehaviour
         {
             itemName = inventoryManager.GetItemNameById(randomId); // ID에 따른 이름
             itemComponent.Initialize(randomId, itemName);
+        }
+        else
+        {
+            Debug.LogError("DroppedItem component not found on the instantiated item.");
         }
 
         Debug.Log($"Dropped {itemName} at {dropPosition}");
