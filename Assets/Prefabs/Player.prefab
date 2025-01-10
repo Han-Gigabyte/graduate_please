@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5354624974201830981}
   - component: {fileID: 2082738595614601047}
   - component: {fileID: 8573810824455855368}
+  - component: {fileID: 2240496510896567273}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -105,7 +106,6 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckSize: {x: 0.4, y: 0.1}
   maxHealth: 100
-  knockbackForce: 10
   knockbackDuration: 0.2
   playerSpriteRenderer: {fileID: 4653082698377534761}
 --- !u!61 &2082738595614601047
@@ -180,3 +180,26 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+<<<<<<< Updated upstream
+--- !u!114 &2240496510896567273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8962749516033509532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3573b9e7980b740a83a3babe00a2b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory:
+    stone: 0
+    tree: 0
+    skin: 0
+    steel: 0
+    gold: 0
+    battery: 0
+    items: 
+=======
+>>>>>>> Stashed changes

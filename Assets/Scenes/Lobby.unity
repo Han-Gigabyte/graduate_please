@@ -922,7 +922,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1186085043}
         m_TargetAssemblyTypeName: CharacterManager, Assembly-CSharp
-        m_MethodName: UpgradeCharacter
+        m_MethodName: ShowUpgradePanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3923,7 +3923,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 903588531, guid: f212f9a6d549d47f5b19476933b324ae, type: 3}
+  m_Sprite: {fileID: -542444463, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

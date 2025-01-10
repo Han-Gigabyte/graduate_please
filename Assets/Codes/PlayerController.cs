@@ -374,7 +374,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
             if (playerBottom >= monsterTop - 0.1f)
             {
-                // 몬스터 머리 위에서 충돌했을 때 점프 횟만 초기화
+                // 몬스터 머리 위에서 충돌했을 때 점프 횟수만 초기화
                 remainingJumps = maxJumpCount;
                 Debug.Log("Monster head hit - jumps reset!");
             }
@@ -447,6 +447,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             playerUI.SetPlayer(this); // PlayerUI에 플레이어를 설정하여 슬라이더 업데이트
         }
+    }
+
+    public void UpdateHealth(int newHealth)
+    {
+        currentHealth = newHealth;
+        Debug.Log($"Player health updated to: {currentHealth}");
     }
 }
 

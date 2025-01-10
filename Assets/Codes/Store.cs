@@ -121,7 +121,7 @@ public class Store : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log("포탈들어옴");
-        Debug.Log(itemList.items[0].name);
+        Debug.Log(ItemListData.items[0].name);
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.IsPlayerInRange = true;

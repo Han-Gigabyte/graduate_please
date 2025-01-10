@@ -12,6 +12,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     private List<GameObject> mapPrefabs = new List<GameObject>();
     private List<GameObject> currentMapSections = new List<GameObject>();
+    private List<GameObject> droppedItems = new List<GameObject>();
 
     private void Awake()
     {
@@ -27,9 +28,13 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+        // GameManager의 LoadSelectedCharacter 메서드 호출
+        GameManager.Instance.LoadSelectedCharacter();
+
         LoadMapPrefabs();
         GenerateStage();
         SpawnInitialEntities();
+        
     }
 
     private void LoadMapPrefabs()

@@ -23,7 +23,7 @@ public class ItemList
 
 public class ItemListData
 {
-    public List<ItemList> items = new List<ItemList>
+    public static List<ItemList> items = new List<ItemList>
     {
         new ItemList(0, "강철 망토", 500, "대시 중 무적 효과 추가"),          // Steel Cloak
         new ItemList(1, "구름 장화", 400, "점프 후 1초정도 부유효과"),        // Cloud Boots
@@ -44,4 +44,12 @@ public class ItemListData
         new ItemList(16, "제우스의 번개", 1500, "55초마다 해당 맵 절반만큼의 적에게 벼락 공격"), // Zeus Lightning
         new ItemList(17, "광전사의 가면", 1100, "체력 비율이 30% 이하일 때 데미지 50% 증가")   // Berserker Mask
     };
+
+    public void InitializeSprites()
+    {
+        foreach (var item in items)
+        {
+            item.ItemSprite = Resources.Load<Sprite>($"Sprites/{item.name}");
+        }
+    }
 }

@@ -86,6 +86,14 @@ public class PoolManager : MonoBehaviour
         }
 
         GameObject obj = poolDictionary[key].Dequeue();
+        
+        // 객체가 null인지 확인
+        if (obj == null)
+        {
+            Debug.LogError($"풀에서 가져온 객체가 null입니다: {key}");
+            return null;
+        }
+
         obj.SetActive(true);
         
         // 비활성화될 때 자동으로 풀로 반환되도록 이벤트 추가

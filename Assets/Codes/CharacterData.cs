@@ -13,5 +13,27 @@ public class CharacterData : ScriptableObject
     public int power;             // 파워
     public int agility;           // 민첩
     public int luck;              // 행운
-}
+    public int maxHealth;         // 캐릭터의 최대 체력
 
+    // 스킬 배열 추가
+    public CharacterSkill[] skills; // 스킬 배열
+
+    // 스킬 초기화 메서드
+    public void InitializeSkills()
+    {
+        // 기본 스킬 초기화 (이 부분은 CharacterManager에서 각 캐릭터에 맞게 수정)
+        skills = new CharacterSkill[4];
+    }
+
+    public void SetSkills(CharacterSkill[] newSkills)
+    {
+        if (newSkills.Length == 4)
+        {
+            skills = newSkills;
+        }
+        else
+        {
+            Debug.LogWarning("스킬 배열의 길이는 4여야 합니다.");
+        }
+    }
+}

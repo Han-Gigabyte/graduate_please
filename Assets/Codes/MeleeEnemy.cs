@@ -14,11 +14,13 @@ public class MeleeEnemy : MonoBehaviour
     [Header("Collision")]
     public CompositeCollider2D compositeCollider;
 
-    [Header("Attack")]
-    private int attackDamage;
+    [Header("Damage")]
     private float knockbackForce;
     private float damageCooldown;
     private float nextDamageTime;
+    public int baseDamage = 10; // 기본 공격력
+    public DamageMultiplier damageMultiplier; // 공격력 비율을 위한 ScriptableObject
+    public int attackDamage;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -26,39 +28,53 @@ public class MeleeEnemy : MonoBehaviour
     private bool isGrounded;
     private bool isFacingRight = true;
 
+    [Header("Health")]
+    public float baseHealth = 100f; // 기본 체력
+    public HealthMultiplier healthMultiplier; // 체력 비율을 위한 ScriptableObject
+    public float calculatedHealth;
+
+    [Header("Item Drop")]
+    [SerializeField] private GameObject itemPrefab; // 아이템 프리팹
+    private InventoryManager inventoryManager;
+
     void Start()
     {
         // GameManager에서 값 가져오기
         moveSpeed = GameManager.Instance.meleeEnemyMoveSpeed;
         detectionRange = GameManager.Instance.meleeEnemyDetectionRange;
-        attackDamage = GameManager.Instance.meleeEnemyDamage;
         knockbackForce = GameManager.Instance.meleeEnemyKnockbackForce;
         damageCooldown = GameManager.Instance.meleeEnemyDamageCooldown;
 
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        
+
+        // 체력과 공격력 초기화
+        float healthMultiplierValue = healthMultiplier.GetHealthMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter);
+        calculatedHealth = baseHealth * healthMultiplierValue;
+
+        attackDamage = Mathf.RoundToInt(baseDamage * damageMultiplier.GetDamageMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter));
+
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.gravityScale = 2.5f;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;  // 연속 충돌 감지 모드로 변경
-        
+
         // 기존 Collider는 물리적 충돌용으로 사용
         GetComponent<Collider2D>().isTrigger = false;
-        
+
         // 새로운 Trigger Collider 추가
         BoxCollider2D triggerCollider = gameObject.AddComponent<BoxCollider2D>();
         triggerCollider.isTrigger = true;
         // 기존 Collider와 같은 크기로 설정
         triggerCollider.size = GetComponent<BoxCollider2D>().size;
         triggerCollider.offset = GetComponent<BoxCollider2D>().offset;
-        
+
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        
+
         // 씬에 있는 모든 Enemy들과의 충돌을 무시
         RangedEnemy[] rangedEnemies = FindObjectsOfType<RangedEnemy>();
         MeleeEnemy[] meleeEnemies = FindObjectsOfType<MeleeEnemy>();
-        
+
         foreach (var enemy in meleeEnemies)
         {
             if (enemy != this)  // 자기 자신은 제외
@@ -66,10 +82,20 @@ public class MeleeEnemy : MonoBehaviour
                 Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemy.GetComponent<Collider2D>(), true);
             }
         }
-        
+
         foreach (var enemy in rangedEnemies)
         {
             Physics2D.IgnoreCollision(GetComponent<Collider2D>(), enemy.GetComponent<Collider2D>(), true);
+        }
+    }
+
+    private void Awake()
+    {
+        // InventoryManager 참조
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager == null)
+        {
+            Debug.LogError("InventoryManager not found in the scene.");
         }
     }
 
@@ -109,12 +135,62 @@ public class MeleeEnemy : MonoBehaviour
             // 플레이어가 감지 범위를 벗어나면 정지
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
+
+        // 체력 체크
+        if (calculatedHealth <= 0)
+        {
+            DropItem();
+            Destroy(gameObject);
+        }
+        //테스트용
+        // 디버그용: K 키를 누르면 몬스터 체력을 0으로 설정
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("Debug: Monster health set to 0 manually.");
+            calculatedHealth = 0;
+            CheckDeath();
+        }
+    }
+    //테스트용 
+    // 체력 0이 되면 아이템 드롭 및 몬스터 파괴 처리
+    private void CheckDeath()
+    {
+        if (calculatedHealth <= 0)
+        {
+            DropItem();
+            Destroy(gameObject);
+        }
     }
 
     void Flip()
     {
         isFacingRight = !isFacingRight;
         spriteRenderer.flipX = !isFacingRight;
+    }
+
+    void DropItem()
+    {
+        string itemName = inventoryManager.GetItemNameById(0);
+        if (inventoryManager == null) return;
+
+        // 랜덤 ID 생성 (0~4 중 하나)
+        int randomId = Random.Range(0, 5);
+
+        // 드랍 위치
+        Vector3 dropPosition = transform.position;
+
+        // 아이템 생성
+        GameObject droppedItem = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
+
+        // 아이템 초기화
+        DroppedItem itemComponent = droppedItem.GetComponent<DroppedItem>();
+        if (itemComponent != null)
+        {
+            itemName = inventoryManager.GetItemNameById(randomId); // ID에 따른 이름
+            itemComponent.Initialize(randomId, itemName);
+        }
+
+        Debug.Log($"Dropped {itemName} at {dropPosition}");
     }
 
     // 디버그용 시각화
@@ -134,25 +210,6 @@ public class MeleeEnemy : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (Time.time >= nextDamageTime)
-            {
-                IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-                if (damageable != null)
-                {
-                    Vector2 knockbackDir = (collision.transform.position - transform.position).normalized;
-                    knockbackDir.y = 0.5f;
-                    
-                    damageable.TakeDamage(attackDamage, knockbackDir, knockbackForce);
-                    nextDamageTime = Time.time + damageCooldown;
-                }
-            }
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {

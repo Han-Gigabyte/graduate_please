@@ -3,16 +3,29 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public PlayerItemData inventory; // 인벤토리 리스트
-    public static InventoryManager Instance { get; private set; }
-    void Awake(){
-        inventory = new PlayerItemData();
-        if (Instance == null)
+    public PlayerItemData inventory = new PlayerItemData(); // 인벤토리 리스트
+
+    // ID와 이름 매핑
+    private Dictionary<int, string> itemNames = new Dictionary<int, string>
+    {
+        { 0, "Stone" },
+        { 1, "Tree" },
+        { 2, "Skin" },
+        { 3, "Steel" },
+        { 4, "Gold" }
+    };
+
+    // ID에 따른 이름 반환
+    public string GetItemNameById(int id)
+    {
+        if (itemNames.TryGetValue(id, out string name))
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            return name;
         }
+        return "Unknown";
     }
+
+ 
     // 아이템 추가
     public void AddItem(int id, int quantity)
     {
@@ -42,10 +55,12 @@ public class InventoryManager : MonoBehaviour
             inventory.items.Add(quantity);
             break;
         }
+    
+        Debug.Log($"Added {quantity} {name} to inventory.");
     }
 
-    // 아이템 제거
-    public void RemoveItem(int id, int quantity)
+// 아이템 제거
+public void RemoveItem(int id, int quantity)
     {
         switch(id){
             case 0: //돌
