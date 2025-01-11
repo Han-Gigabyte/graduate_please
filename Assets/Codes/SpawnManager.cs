@@ -20,7 +20,9 @@ public class SpawnManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        GameManager.Instance.enemyNumber=0;
     }
+    
 
     public void SpawnEntities()
     {
@@ -62,6 +64,12 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.LogWarning("Ranged Enemy Prefab is not assigned!");
         }
+    }
+    void EnemyInstantiate(GameObject EnemyPrefab, Vector3 Position ){
+        Instantiate(EnemyPrefab, Position, Quaternion.identity); 
+        GameManager.Instance.enemyNumber++;
+        
+
     }
 
     // Start is called before the first frame update
