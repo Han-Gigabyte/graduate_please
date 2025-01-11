@@ -31,15 +31,21 @@ public class SkillManager : MonoBehaviour
                 Debug.Log("Casting Fireball!");
                 // Fireball 애니메이션 및 효과 적용
                 Collider[] hitColliders = Physics.OverlapSphere(characterTransform.position, skill.effectRadius);
+                int enemyCount = 0; // 감지된 적의 개수
+
                 foreach (var hitCollider in hitColliders)
                 {
                     // 적에게 데미지 주는 로직
                     if (hitCollider.CompareTag("Enemy"))
                     {
-                        Debug.Log($"Dealing {skill.skillDamage} damage to {hitCollider.name}.");
+                        enemyCount++; // 적 개수 추가
+                        Debug.Log($"Dealing {skill.effectValue} damage to {hitCollider.name}.");
                         // 적에게 데미지 적용 로직 추가
                     }
                 }
+
+                // 감지된 적의 개수 로그 출력
+                Debug.Log($"Number of enemies detected in range: {enemyCount}");
                 
                 break;
 
@@ -67,25 +73,34 @@ public class SkillManager : MonoBehaviour
             case CharacterSkill.EffectType.Debuff:
                 // 유효 범위 내의 적 찾기
                 Collider[] hitColliders = Physics.OverlapSphere(characterTransform.position, skill.effectRadius);
+                int enemyCount = 0; // 감지된 적의 개수
+
                 foreach (var hitCollider in hitColliders)
                 {
                     // 적에게 데미지 주는 로직
                     if (hitCollider.CompareTag("Enemy"))
                     {
+                        enemyCount++; // 적 개수 추가
                         Debug.Log($"Dealing {skill.effectValue} damage to {hitCollider.name}.");
                         // 적에게 데미지 적용 로직 추가
                     }
                 }
+
+                // 감지된 적의 개수 로그 출력
+                Debug.Log($"Number of enemies detected in range: {enemyCount}");
                 break;
+
             case CharacterSkill.EffectType.Heal:
                 int healAmount = CalculateHealAmount(skill.effectValue);
                 GameManager.Instance.ModifyHealth(healAmount);
                 Debug.Log($"Healing for {healAmount} health.");
                 break;
+
             case CharacterSkill.EffectType.Buff:
                 // 캐릭터 버프 적용 로직
                 Debug.Log($"Buffing character with {skill.effectValue}.");
                 break;
+
             default:
                 break;
         }
