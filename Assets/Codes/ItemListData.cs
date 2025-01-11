@@ -9,7 +9,7 @@ public class ItemList
     public string name;      // 아이템 이름
     public int price;        // 아이템 가격
     public string explaination;  // 아이템 설명
-    
+    public Sprite ItemSprite; // 아이템 스프라이트 추가
 
     // 생성자
     public ItemList(int id, string name, int price, string explaination)
@@ -18,6 +18,7 @@ public class ItemList
         this.name = name;
         this.price = price;
         this.explaination = explaination;
+        this.ItemSprite = null; // 초기값 설정
     }
 }
 

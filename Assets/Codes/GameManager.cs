@@ -384,4 +384,14 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("No character data found in CharacterSelectionData.");
         }
     }
+
+    // 선택된 캐릭터의 스프라이트를 반환하는 메서드
+    public Sprite GetSelectedCharacterSprite()
+    {
+        if (CurrentCharacter != null)
+        {
+            return CurrentCharacter.characterSprite; // characterSprite가 CharacterData에 정의되어 있어야 함
+        }
+        return null;
+    }
 }

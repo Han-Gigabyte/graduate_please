@@ -469,7 +469,7 @@ MonoBehaviour:
   targetTilemap: {fileID: 952985895}
   stagePortalPrefab: {fileID: 2840797550389458792, guid: d31b5b152aae4ad41a45c6d3ec2a2904, type: 3}
   groundPrefab: {fileID: 8379742428021713048, guid: ac15d7c3c2979c949be5a1f6af9d274b, type: 3}
-  playerPrefab: {fileID: 8962749516033509532, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
+  playerPrefab: {fileID: 8962749516033509532, guid: 4409161bf95071a41bb0364faa83899f, type: 3}
 --- !u!4 &951659765
 Transform:
   m_ObjectHideFlags: 0
@@ -776,6 +776,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2085263772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2085263774}
+  - component: {fileID: 2085263773}
+  m_Layer: 0
+  m_Name: InventoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2085263773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085263772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3573b9e7980b740a83a3babe00a2b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory:
+    stone: 10
+    stonePrice: 3
+    tree: 10
+    treePrice: 17
+    skin: 10
+    skinPrice: 50
+    steel: 10
+    steelPrice: 95
+    gold: 10
+    goldPrice: 165
+    money: 0
+    battery: 0
+    items: 
+--- !u!4 &2085263774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085263772}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 660.87024, y: 511.36798, z: -9.92987}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6506690927228484559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -974,3 +1032,4 @@ SceneRoots:
   - {fileID: 746803446}
   - {fileID: 1088104510}
   - {fileID: 64916979}
+  - {fileID: 2085263774}
