@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
         get => isPlayerInRange;
         set => isPlayerInRange = value;
     }
-    public int enemyNumber;
 
     [Header("Player Settings")]
     public float playerMoveSpeed = 5f;
@@ -62,6 +61,7 @@ public class GameManager : MonoBehaviour
         get => currentPlayerHealth;
         set => currentPlayerHealth = value;
     }
+    
     
 
 

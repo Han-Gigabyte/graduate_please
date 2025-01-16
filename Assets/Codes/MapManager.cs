@@ -168,7 +168,7 @@ public class MapManager : MonoBehaviour
             availablePrefabs.RemoveAt(randomIndex);
         }
 
-        SpawnPortal();
+        //SpawnPortal();
 
         // 스테이지가 새로 생성될 때마다 적 소환 (첫 스테이지 제외)
         if (Time.timeSinceLevelLoad > 1f)  // 게임 시작 직후가 아닐 때만
@@ -235,7 +235,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private void SpawnPortal()
+    public void SpawnPortal()
     {
         if (stagePortalPrefab == null)
         {

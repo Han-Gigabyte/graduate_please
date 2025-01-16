@@ -20,7 +20,6 @@ public class SpawnManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        GameManager.Instance.enemyNumber=0;
     }
     
 
@@ -45,6 +44,7 @@ public class SpawnManager : MonoBehaviour
         if (meleeEnemyPrefab != null)
         {
             Vector3 meleePosition = baseSpawnPosition + new Vector3(-2f, 0f, 0f);
+            PortalManager.Instance.updateEnemy(1);
             Instantiate(meleeEnemyPrefab, meleePosition, Quaternion.identity);
             Debug.Log("Melee Enemy spawned at: " + meleePosition);
         }
@@ -57,6 +57,7 @@ public class SpawnManager : MonoBehaviour
         if (rangedEnemyPrefab != null)
         {
             Vector3 rangedPosition = baseSpawnPosition + new Vector3(2f, 0f, 0f);
+            PortalManager.Instance.updateEnemy(1);
             Instantiate(rangedEnemyPrefab, rangedPosition, Quaternion.identity);
             Debug.Log("Ranged Enemy spawned at: " + rangedPosition);
         }
@@ -64,12 +65,6 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.LogWarning("Ranged Enemy Prefab is not assigned!");
         }
-    }
-    void EnemyInstantiate(GameObject EnemyPrefab, Vector3 Position ){
-        Instantiate(EnemyPrefab, Position, Quaternion.identity); 
-        GameManager.Instance.enemyNumber++;
-        
-
     }
 
     // Start is called before the first frame update

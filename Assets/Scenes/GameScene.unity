@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 576923599}
   - component: {fileID: 576923598}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: monster_Number_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -862,6 +862,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136183746}
   m_CullTransparentMesh: 1
+--- !u!1 &1304119731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1304119733}
+  - component: {fileID: 1304119732}
+  m_Layer: 0
+  m_Name: PortalManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1304119732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304119731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c8d6372edb1714daec86012776a592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyText: {fileID: 576923598}
+  enemyNumber: 0
+  killNumber: 0
+  Portal: {fileID: 0}
+--- !u!4 &1304119733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304119731}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 602.0508, y: 424.23895, z: -5.0383496}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1541887341
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,7 +1020,6 @@ MonoBehaviour:
   stage: 0
   chapter: 0
   isPlayerInRange: 0
-  enemyNumber: 0
   playerMoveSpeed: 5
   playerJumpForce: 9.6
   playerGravityScale: 2.5
@@ -994,6 +1041,7 @@ MonoBehaviour:
   enemyProjectileKnockbackForce: 4
   playerUIPrefab: {fileID: 6837033524123068816, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
   playerSpriteRenderer: {fileID: 4653082698377534761, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
+  monsterNumber: {fileID: 576923598}
 --- !u!4 &1950971167
 Transform:
   m_ObjectHideFlags: 0
@@ -1268,3 +1316,4 @@ SceneRoots:
   - {fileID: 1088104510}
   - {fileID: 64916979}
   - {fileID: 2085263774}
+  - {fileID: 1304119733}
