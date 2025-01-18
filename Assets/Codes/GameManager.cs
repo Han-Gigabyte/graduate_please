@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -61,11 +61,14 @@ public class GameManager : MonoBehaviour
         get => currentPlayerHealth;
         set => currentPlayerHealth = value;
     }
+    
+    
 
 
     [Header("UI Prefabs")]
     public GameObject playerUIPrefab; // PlayerUI 프리팹을 위한 변수
     public SpriteRenderer playerSpriteRenderer; // 게임 캐릭터의 SpriteRenderer
+    public Text monsterNumber;
 
     // 새로운 기능: 현재 선택된 캐릭터 데이터
     public CharacterData CurrentCharacter { get; private set; }
