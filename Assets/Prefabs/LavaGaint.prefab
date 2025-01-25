@@ -61,7 +61,7 @@ MonoBehaviour:
   healthMultiplier: {fileID: 11400000, guid: cb1019c93ba0be943b490ba77429d6b4, type: 2}
   calculatedHealth: 0
   itemPrefab: {fileID: 0}
-  dashForce: 70
+  dashForce: 80
   dashCooltime: 3
 --- !u!212 &122197634965626083
 SpriteRenderer:

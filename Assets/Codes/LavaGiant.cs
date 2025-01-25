@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LavaGaint : MonoBehaviour
 {
@@ -118,6 +119,14 @@ public class LavaGaint : MonoBehaviour
             return;
         }
         direction = (playerTransform.position - transform.position).normalized;
+        skillTimer+=Time.deltaTime;
+        int skillNum;
+        if (skillTimer >= skillInterval) // 1분마다 한번씩 랜덤으로 스킬 실행
+        {
+            skillNum = Random.Range(0,4);// 스킬 4개
+            skillTimer = 0f; // 타이머 초기화
+            mySkill(skillNum);
+        }
 
         // 플레이어와의 거리 체크
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
@@ -143,10 +152,10 @@ public class LavaGaint : MonoBehaviour
                 Debug.Log("Dash is ready!");
             }
         }
-        if(canDash&&Mathf.Abs(distanceToPlayer)>=3 ){ //일정 거리 이상 멀어지면 돌진 패턴
+        // if(canDash&&Mathf.Abs(distanceToPlayer)>=3 ){ //일정 거리 이상 멀어지면 돌진 패턴
         
-            Dash();
-        }
+        //     Dash();
+        // }
 
         // 체력 체크
         if (calculatedHealth <= 0)
@@ -163,6 +172,14 @@ public class LavaGaint : MonoBehaviour
             CheckDeath();
         }
     }
+    private float skillTimer = 0f;
+    private float skillInterval = 10f;
+    void mySkill(int skillNum){
+        Debug.Log("스킬"+skillNum+ "실행");
+    }
+
+
+
     private bool canDash = true;
     private float dashCooldownTimer = 0f;
     private bool isDashing = false;
@@ -172,9 +189,9 @@ public class LavaGaint : MonoBehaviour
         float dashDirection = direction.x>=0 ? 1f : -1f;
         // 현재 속도를 초기화하고 대시 방향으로 힘을 가함
         // 대시 속도 설정
+        // 대시 속도 직접 설정
+        rb.velocity = new Vector2(dashDirection * dashForce, rb.velocity.y);
         
-
-        rb.AddForce(new Vector2(dashDirection * dashForce, 1f), ForceMode2D.Impulse);
 
         // 대시 코루틴 시작
         //StartCoroutine(DashCoroutine());
