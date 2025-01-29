@@ -175,9 +175,49 @@ public class LavaGaint : MonoBehaviour
     private float skillTimer = 0f;
     private float skillInterval = 10f;
     void mySkill(int skillNum){
+        skillNum = 1;
+        switch (skillNum)
+    {
+        case 0:
+            //Dash();
+            break;
+        case 1:
+            CircularAttack();
+            break;
+        case 2:
+            //WaveAttack();
+            break;
+        default:
+            Debug.Log("잘못된 스킬 번호");
+            break;
+    }
         Debug.Log("스킬"+skillNum+ "실행");
     }
+public GameObject circularAttackEffectPrefab; // 원형 공격 이펙트 프리팹
 
+private void CircularAttack()
+{
+    // 이펙트 생성
+    if (circularAttackEffectPrefab != null)
+    {
+        GameObject effect = Instantiate(circularAttackEffectPrefab, transform.position, Quaternion.identity);
+        Destroy(effect, 0.5f); // 0.5초 후 이펙트 제거
+        Debug.Log("이펙트 출력");
+    }
+
+    // 주변 플레이어에게 데미지 적용
+    Collider2D[] hitPlayers = Physics2D.OverlapCircleAll(transform.position, 3f, LayerMask.GetMask("Player"));
+    foreach (var player in hitPlayers)
+    {
+        IDamageable damageable = player.GetComponent<IDamageable>();
+        if (damageable != null)
+        {
+            Vector2 knockbackDir = (player.transform.position - transform.position).normalized;
+            damageable.TakeDamage(attackDamage, knockbackDir, knockbackForce);
+        }
+    }
+    Debug.Log("원형 공격 사용");
+}
 
 
     private bool canDash = true;
