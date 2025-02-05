@@ -104,11 +104,12 @@ public class LavaGaint : MonoBehaviour
             Debug.LogError("InventoryManager not found in the scene.");
             return; // InventoryManager가 없으면 메서드 종료
         }
+        canMove = true;
 
         inventoryManager = InventoryManager.Instance; // inventoryManager 초기화
     }
     Vector2 direction;
-
+    bool canMove;
     void Update()
     {
         // 플레이어가 죽었거나 없으면 더 이상 진행하지 않음
@@ -131,7 +132,12 @@ public class LavaGaint : MonoBehaviour
         // 플레이어와의 거리 체크
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
         // x축 방향으로만 이동
-            rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);   
+        if(canMove){
+            rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+        }
+        else{
+            rb.velocity =Vector2.zero;
+        }
             // 스프라이트 방향 전환
             if (direction.x > 0 && !isFacingRight)
             {
@@ -175,7 +181,7 @@ public class LavaGaint : MonoBehaviour
     private float skillTimer = 0f;
     private float skillInterval = 10f;
     void mySkill(int skillNum){
-        skillNum = 1;
+        skillNum = 2;
         switch (skillNum)
     {
         case 0:
@@ -185,7 +191,7 @@ public class LavaGaint : MonoBehaviour
             CircularAttack();
             break;
         case 2:
-            //WaveAttack();
+            RaserAttack();
             break;
         default:
             Debug.Log("잘못된 스킬 번호");
@@ -197,10 +203,11 @@ public GameObject circularAttackEffectPrefab; // 원형 공격 이펙트 프리�
 
 private void CircularAttack()
 {
+    StopMovement(0.5f);
     // 이펙트 생성
     if (circularAttackEffectPrefab != null)
     {
-        GameObject effect = Instantiate(circularAttackEffectPrefab, transform.position, Quaternion.identity);
+        GameObject effect = Instantiate(circularAttackEffectPrefab, transform.position+new Vector3(0f,direction.x*4,0f), Quaternion.identity);
         Destroy(effect, 0.5f); // 0.5초 후 이펙트 제거
         Debug.Log("이펙트 출력");
     }
@@ -218,7 +225,40 @@ private void CircularAttack()
     }
     Debug.Log("원형 공격 사용");
 }
+public GameObject RaserEffectPrefab;
+private void RaserAttack()
+{
+    StopMovement(1.5f); // 몬스터 멈추기
 
+    // 방향 벡터 정규화
+    Vector2 shootDirection = direction.normalized;
+
+    // 이펙트 생성 (플레이어 방향으로)
+    if (RaserEffectPrefab != null)
+    {
+
+        // 레이저 이펙트 생성
+        GameObject effect = Instantiate(RaserEffectPrefab, transform.position, Quaternion.identity);
+        
+        // 이펙트 이동 (속도 조절 가능)
+        Rigidbody2D effectRb = effect.GetComponent<Rigidbody2D>();
+        if (effectRb != null)
+        {
+            effectRb.velocity = shootDirection * 5f; // 속도 조절
+        }
+
+        Destroy(effect, 1.5f); // 1.5초 후 이펙트 제거
+    }
+
+    Debug.Log("레이저 공격 사용");
+}
+private IEnumerator StopMovement(float stopDuration)
+    {
+        rb.velocity = Vector2.zero;
+        canMove =false;
+        yield return new WaitForSeconds(stopDuration);
+        canMove =true; // 원래 속도로 복귀
+    }
 
     private bool canDash = true;
     private float dashCooldownTimer = 0f;

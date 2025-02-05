@@ -64,6 +64,7 @@ MonoBehaviour:
   dashForce: 80
   dashCooltime: 3
   circularAttackEffectPrefab: {fileID: 3415900879390828816, guid: a4e1ed99dea1bf34683a954e88257162, type: 3}
+  RaserEffectPrefab: {fileID: 5605060386581786699, guid: 2880d106368995d4ebb8f71197cbb1ab, type: 3}
 --- !u!212 &122197634965626083
 SpriteRenderer:
   m_ObjectHideFlags: 0
