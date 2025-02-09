@@ -12,7 +12,7 @@ public class DroppedItem : MonoBehaviour
     {
         itemId = id;
         itemName = name;
-
+        Debug.Log($"Dropped Item Initialized: ID = {itemId}, Name = {itemName}, Quantity = {quantity}");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,7 +26,7 @@ public class DroppedItem : MonoBehaviour
             InventoryManager inventoryManager = collision.GetComponent<InventoryManager>();
             if (inventoryManager != null)
             {
-                inventoryManager.AddItem(itemId, itemName, quantity);
+                inventoryManager.AddItem(itemId, quantity);
             }
 
             // 아이템 제거

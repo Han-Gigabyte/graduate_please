@@ -278,9 +278,26 @@ public class MapManager : MonoBehaviour
         // 플레이어 소환
         if (playerPrefab != null)
         {
-            Vector3 playerSpawnPosition = new Vector3(2f, 2f, 0f);
-            GameObject player = Instantiate(playerPrefab, playerSpawnPosition, Quaternion.identity);
-            
+            // 기존 플레이어가 있는지 확인
+            PlayerController existingPlayer = FindObjectOfType<PlayerController>();
+            GameObject player;
+
+            if (existingPlayer == null)
+            {
+                // 기존 플레이어가 없으면 새로 생성
+                Vector3 playerSpawnPosition = new Vector3(2f, 2f, 0f);
+                player = Instantiate(playerPrefab, playerSpawnPosition, Quaternion.identity);
+                DontDestroyOnLoad(player); // 씬 이동해도 플레이어 유지
+                Debug.Log("New player instantiated");
+            }
+            else
+            {
+                // 기존 플레이어 사용
+                player = existingPlayer.gameObject;
+                player.transform.position = new Vector3(2f, 2f, 0f); // 위치를 초기화
+                Debug.Log("Existing player found and moved to spawn position");
+            }
+
             // 메인 카메라 찾기
             Camera mainCamera = Camera.main;
             if (mainCamera != null)

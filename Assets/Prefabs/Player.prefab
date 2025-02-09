@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5354624974201830981}
   - component: {fileID: 2082738595614601047}
   - component: {fileID: 8573810824455855368}
-  - component: {fileID: 2240496510896567273}
+  - component: {fileID: 1745889298934109759}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -180,8 +180,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
-<<<<<<< Updated upstream
---- !u!114 &2240496510896567273
+--- !u!114 &1745889298934109759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,12 +193,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory:
-    stone: 0
-    tree: 0
-    skin: 0
-    steel: 0
-    gold: 0
+    stone: 10
+    stonePrice: 3
+    tree: 10
+    treePrice: 17
+    skin: 10
+    skinPrice: 50
+    steel: 10
+    steelPrice: 95
+    gold: 10
+    goldPrice: 165
+    money: 0
     battery: 0
     items: 
-=======
->>>>>>> Stashed changes

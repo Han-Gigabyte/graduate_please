@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager Instance { get; private set; }
+
     public PlayerItemData inventory = new PlayerItemData(); // 인벤토리 리스트
 
     // ID와 이름 매핑
@@ -25,7 +27,19 @@ public class InventoryManager : MonoBehaviour
         return "Unknown";
     }
 
- 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 기존 인스턴스가 있으면 새로운 인스턴스 삭제
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+    }
+
+
     // 아이템 추가
     public void AddItem(int id, int quantity)
     {

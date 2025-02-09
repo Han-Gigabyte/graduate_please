@@ -12,11 +12,11 @@ public class StorePortal : MonoBehaviour
             {
                 int currentStage = GameManager.Instance.Stage;
 
-                SceneManager.LoadScene("GameScene");
-
                 // 다음 스테이지로 이동
                 GameManager.Instance.SavePlayerState();
                 GameManager.Instance.LoadNextStage();
+
+                SceneManager.LoadScene("GameScene");
             }
         }
     }
