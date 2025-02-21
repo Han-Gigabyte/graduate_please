@@ -34,7 +34,6 @@ public class MapManager : MonoBehaviour
         LoadMapPrefabs();
         GenerateStage();
         SpawnInitialEntities();
-        
     }
 
     private void LoadMapPrefabs()
@@ -75,12 +74,10 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-        
         if (minX != int.MaxValue)
         {
             return maxX - minX + 1;
         }
-        
         return bounds.size.x;
     }
 

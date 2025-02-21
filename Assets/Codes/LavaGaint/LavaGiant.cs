@@ -136,7 +136,7 @@ public class LavaGaint : MonoBehaviour
             rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
         }
         else{
-            rb.velocity =Vector2.zero;
+            rb.velocity =new Vector2(0, rb.velocity.y);
         }
             // 스프라이트 방향 전환
             if (direction.x > 0 && !isFacingRight)
@@ -228,7 +228,7 @@ private void CircularAttack()
 public GameObject RaserEffectPrefab;
 private void RaserAttack()
 {
-    StopMovement(1.5f); // 몬스터 멈추기
+    StartCoroutine(StopMovement(1.5f)); // 몬스터 멈추기
 
     // 방향 벡터 정규화
     Vector2 shootDirection = direction.normalized;
@@ -238,7 +238,7 @@ private void RaserAttack()
     {
 
         // 레이저 이펙트 생성
-        GameObject effect = Instantiate(RaserEffectPrefab, transform.position, Quaternion.identity);
+        GameObject effect = Instantiate(RaserEffectPrefab, transform.position+new Vector3(5*direction.x,0,0), Quaternion.identity);
         
         // 이펙트 이동 (속도 조절 가능)
         Rigidbody2D effectRb = effect.GetComponent<Rigidbody2D>();
@@ -254,8 +254,8 @@ private void RaserAttack()
 }
 private IEnumerator StopMovement(float stopDuration)
     {
-        rb.velocity = Vector2.zero;
         canMove =false;
+        Debug.Log("보스몬스터 정지");
         yield return new WaitForSeconds(stopDuration);
         canMove =true; // 원래 속도로 복귀
     }
