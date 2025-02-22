@@ -50,7 +50,7 @@ public class ItemListData
     {
         foreach (var item in items)
         {
-            item.itemSprite = Resources.Load<Sprite>($"Sprites/{item.name}");
+            // item.itemSprite = Resources.Load<Sprite>($"Sprites/{item.name}");
         }
     }
 }
