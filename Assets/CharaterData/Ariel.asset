@@ -20,3 +20,8 @@ MonoBehaviour:
   power: 0
   agility: 0
   luck: 0
+  skills:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

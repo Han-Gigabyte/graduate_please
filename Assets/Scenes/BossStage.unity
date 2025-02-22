@@ -410,9 +410,6 @@ MonoBehaviour:
   - key: EnemyProjectile
     prefab: {fileID: 8450934561260396868, guid: 4f4b268aead4eec4eb223d3ae3df1ba0, type: 3}
     initialSize: 10
-  playerProjectilePrefab: {fileID: 8450934561260396868, guid: 4f4b268aead4eec4eb223d3ae3df1ba0, type: 3}
-  enemyProjectilePrefab: {fileID: 8450934561260396868, guid: 4f4b268aead4eec4eb223d3ae3df1ba0, type: 3}
-  poolSize: 10
 --- !u!4 &746803446
 Transform:
   m_ObjectHideFlags: 0
@@ -502,8 +499,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4242b7e7dd5c6468fcc863e8e14c6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meleeEnemyPrefab: {fileID: 8372166154551508869, guid: 8d5bdd52dec08c840a107532559e9a76, type: 3}
-  rangedEnemyPrefab: {fileID: 1651906025392740170, guid: 5b3750462f1a61a4fa83e1a05b0dc11d, type: 3}
+  meleeEnemyPrefab: {fileID: 7066774727544269206, guid: e2c1686a8e03a3840b718cb3ebbea061, type: 3}
+  rangedEnemyPrefab: {fileID: 0}
 --- !u!4 &951144598
 Transform:
   m_ObjectHideFlags: 0
@@ -1042,7 +1039,7 @@ MonoBehaviour:
   rangedEnemyAttackCooldown: 2
   rangedEnemyProjectileSpeed: 8
   enemyProjectileKnockbackForce: 4
-  playerUIPrefab: {fileID: 8962749516033509532, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
+  playerUIPrefab: {fileID: 6837033524123068816, guid: 0aa8535746ec92846ad97e12e43ed025, type: 3}
   playerSpriteRenderer: {fileID: 4653082698377534761, guid: fd6fc2388e8ab4b4d8ce8a298f11f6c0, type: 3}
   monsterNumber: {fileID: 576923598}
 --- !u!4 &1950971167

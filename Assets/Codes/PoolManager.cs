@@ -17,6 +17,13 @@ public class PoolManager : MonoBehaviour
     private Dictionary<string, Queue<GameObject>> poolDictionary;
     private Dictionary<string, GameObject> prefabDictionary;
 
+    public GameObject playerProjectilePrefab; // 플레이어 투사체 프리팹
+    public GameObject enemyProjectilePrefab; // 적 투사체 프리팹
+    public int poolSize = 10; // 풀 크기
+
+    private List<GameObject> playerProjectilePool; // 플레이어 투사체 풀
+    private List<GameObject> enemyProjectilePool; // 적 투사체 풀
+
     void Awake()
     {
         // 싱글톤 설정
@@ -53,6 +60,20 @@ public class PoolManager : MonoBehaviour
             }
 
             poolDictionary.Add(pool.key, objectPool);
+        }
+
+        playerProjectilePool = new List<GameObject>();
+        enemyProjectilePool = new List<GameObject>();
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject playerProjectile = Instantiate(playerProjectilePrefab);
+            playerProjectile.SetActive(false); // 비활성화 상태로 풀에 추가
+            playerProjectilePool.Add(playerProjectile);
+
+            GameObject enemyProjectile = Instantiate(enemyProjectilePrefab);
+            enemyProjectile.SetActive(false); // 비활성화 상태로 풀에 추가
+            enemyProjectilePool.Add(enemyProjectile);
         }
     }
 
@@ -127,6 +148,42 @@ public class PoolManager : MonoBehaviour
 
         obj.SetActive(false);
         poolDictionary[key].Enqueue(obj);
+    }
+
+    public GameObject GetProjectile(string type)
+    {
+        if (type == "Player")
+        {
+            foreach (var projectile in playerProjectilePool)
+            {
+                if (projectile == null)
+                {
+                    Debug.LogError("Found a null projectile in the pool!");
+                    continue; // null인 경우 건너뜁니다.
+                }
+                if (!projectile.activeInHierarchy)
+                {
+                    return projectile; // 비활성화된 플레이어 투사체 반환
+                }
+            }
+        }
+        else if (type == "Enemy")
+        {
+            foreach (var projectile in enemyProjectilePool)
+            {
+                if (projectile == null)
+                {
+                    Debug.LogError("Found a null projectile in the pool!");
+                    continue; // null인 경우 건너뜁니다.
+                }
+                if (!projectile.activeInHierarchy)
+                {
+                    return projectile; // 비활성화된 적 투사체 반환
+                }
+            }
+        }
+        Debug.LogWarning($"No available projectiles of type {type} in the pool.");
+        return null; // 사용할 수 있는 투사체가 없으면 null 반환
     }
 }
 

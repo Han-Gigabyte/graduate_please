@@ -21,6 +21,7 @@ public class SpawnManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
 
     public void SpawnEntities()
     {
@@ -43,6 +44,7 @@ public class SpawnManager : MonoBehaviour
         if (meleeEnemyPrefab != null)
         {
             Vector3 meleePosition = baseSpawnPosition + new Vector3(-2f, 0f, 0f);
+            PortalManager.Instance.updateEnemy(1);
             Instantiate(meleeEnemyPrefab, meleePosition, Quaternion.identity);
             Debug.Log("Melee Enemy spawned at: " + meleePosition);
         }
@@ -55,6 +57,7 @@ public class SpawnManager : MonoBehaviour
         if (rangedEnemyPrefab != null)
         {
             Vector3 rangedPosition = baseSpawnPosition + new Vector3(2f, 0f, 0f);
+            PortalManager.Instance.updateEnemy(1);
             Instantiate(rangedEnemyPrefab, rangedPosition, Quaternion.identity);
             Debug.Log("Ranged Enemy spawned at: " + rangedPosition);
         }

@@ -14,6 +14,7 @@ public class PlayerUI : MonoBehaviour
     private PlayerController player;
     private Camera mainCamera;
     private RectTransform rectTransform;
+    
 
     private void Start()
     {
@@ -29,6 +30,7 @@ public class PlayerUI : MonoBehaviour
             InitializeHealthUI();
         }
     }
+    
 
     private void Update()
     {

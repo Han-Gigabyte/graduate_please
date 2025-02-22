@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class MeleeEnemy : MonoBehaviour
+public class LavaGaint : MonoBehaviour
 {
     [Header("Movement")]
     private float moveSpeed;
@@ -18,7 +19,9 @@ public class MeleeEnemy : MonoBehaviour
     private float knockbackForce;
     private float damageCooldown;
     private float nextDamageTime;
+
     public int baseDamage = 10; // 기본 공격력
+    
     public DamageMultiplier damageMultiplier; // 공격력 비율을 위한 ScriptableObject
     public int attackDamage;
 
@@ -32,11 +35,14 @@ public class MeleeEnemy : MonoBehaviour
     public float baseHealth = 100f; // 기본 체력
     public HealthMultiplier healthMultiplier; // 체력 비율을 위한 ScriptableObject
     public float calculatedHealth;
-    public float currentHealth; // 현재 체력
 
     [Header("Item Drop")]
     [SerializeField] private GameObject itemPrefab; // 아이템 프리팹
     private InventoryManager inventoryManager;
+    [Header("Attack")]
+    public int dashForce = 30;
+    public int dashCooltime = 3;
+    
 
     void Start()
     {
@@ -53,8 +59,6 @@ public class MeleeEnemy : MonoBehaviour
         // 체력과 공격력 초기화
         float healthMultiplierValue = healthMultiplier.GetHealthMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter);
         calculatedHealth = baseHealth * healthMultiplierValue;
-        currentHealth = calculatedHealth;
-        Debug.Log($"MeleeEnemy spawned with current health: {currentHealth}");
 
         attackDamage = Mathf.RoundToInt(baseDamage * damageMultiplier.GetDamageMultiplier(GameManager.Instance.Stage, GameManager.Instance.Chapter));
 
@@ -102,6 +106,7 @@ public class MeleeEnemy : MonoBehaviour
 
         inventoryManager = InventoryManager.Instance; // inventoryManager 초기화
     }
+    Vector2 direction;
 
     void Update()
     {
@@ -112,18 +117,12 @@ public class MeleeEnemy : MonoBehaviour
             rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
+        direction = (playerTransform.position - transform.position).normalized;
 
         // 플레이어와의 거리 체크
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-        
-        if (distanceToPlayer <= detectionRange)
-        {
-            // 플레이어 방향으로 이동
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
-            
-            // x축 방향으로만 이동
-            rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
-            
+        // x축 방향으로만 이동
+            rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);   
             // 스프라이트 방향 전환
             if (direction.x > 0 && !isFacingRight)
             {
@@ -133,11 +132,20 @@ public class MeleeEnemy : MonoBehaviour
             {
                 Flip();
             }
-        }
-        else
+        
+        // 대시 쿨다운 체크
+        if (!canDash)
         {
-            // 플레이어가 감지 범위를 벗어나면 정지
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            dashCooldownTimer -= Time.deltaTime;
+            if (dashCooldownTimer <= 0)
+            {
+                canDash = true;
+                Debug.Log("Dash is ready!");
+            }
+        }
+        if(canDash&&Mathf.Abs(distanceToPlayer)>=3 ){ //일정 거리 이상 멀어지면 돌진 패턴
+        
+            Dash();
         }
 
         // 체력 체크
@@ -155,6 +163,39 @@ public class MeleeEnemy : MonoBehaviour
             CheckDeath();
         }
     }
+    private bool canDash = true;
+    private float dashCooldownTimer = 0f;
+    private bool isDashing = false;
+    private float dashCooldown=2f;
+    private void Dash(){
+        
+        float dashDirection = direction.x>=0 ? 1f : -1f;
+        // 현재 속도를 초기화하고 대시 방향으로 힘을 가함
+        // 대시 속도 설정
+        
+
+        rb.AddForce(new Vector2(dashDirection * dashForce, 1f), ForceMode2D.Impulse);
+
+        // 대시 코루틴 시작
+        //StartCoroutine(DashCoroutine());
+
+        // 쿨다운 시작
+        canDash = false;
+        dashCooldownTimer = dashCooldown;
+        Debug.Log($"보스몬스터 대쉬사용");
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        isDashing = true;
+        
+        // 대시 지속 시간
+        yield return new WaitForSeconds(0.35f);
+        rb.velocity = Vector2.zero;
+        
+        isDashing = false;
+    }
+    
     //테스트용 
     // 체력 0이 되면 아이템 드롭 및 몬스터 파괴 처리
     private void CheckDeath()
@@ -183,7 +224,7 @@ public class MeleeEnemy : MonoBehaviour
         if (itemPrefab == null)
         {
             Debug.LogError("Item prefab is not assigned.");
-            return; // itemPrefab이 null이면 메서드 종료
+            return; // itemPrefab이 null이면 �서드 종료
         }
 
         string itemName = inventoryManager.GetItemNameById(0);
@@ -245,24 +286,5 @@ public class MeleeEnemy : MonoBehaviour
                 }
             }
         }
-    }
-
-    // 체력을 변경하는 메서드 예시
-    public void TakeDamage(float damage)
-    {
-        currentHealth -= damage; // 데미지를 받아 현재 체력 감소
-        Debug.Log($"MeleeEnemy took damage: {damage}. Current health: {currentHealth}");
-
-        if (currentHealth <= 0)
-        {
-            Die(); // 체력이 0 이하가 되면 사망 처리
-        }
-    }
-
-    private void Die()
-    {
-        Debug.Log("MeleeEnemy died.");
-        // 사망 처리 로직 (예: 게임 오브젝트 비활성화)
-        gameObject.SetActive(false);
     }
 }
