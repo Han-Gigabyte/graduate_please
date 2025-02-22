@@ -16,6 +16,9 @@ public class SkillManager : MonoBehaviour
         
     }
 
+    public float effectRadius = 17f; // effectRadius 변수 추가 (필요시 조정)
+    private Vector3 fireballPosition; // Fireball 스킬 사용 시 위치 저장
+
     public void UseSkill(CharacterSkill skill, Transform characterTransform)
     {
         Debug.Log($"Using skill: {skill.skillName} with damage: {skill.skillDamage} or effect value: {skill.effectValue}");
@@ -27,20 +30,63 @@ public class SkillManager : MonoBehaviour
         switch (skill.skillName)
         {
             case "Fireball":
-                // Fireball 스킬 효과
-                Debug.Log("Casting Fireball!");
-                // Fireball 애니메이션 및 효과 적용
-                Collider[] hitColliders = Physics.OverlapSphere(characterTransform.position, skill.effectRadius);
-                foreach (var hitCollider in hitColliders)
+                // 카메라의 위치를 사용하여 현재 씬에서 Tag가 Enemy인 오브젝트 감지
+                Vector3 cameraPosition = Camera.main.transform.position; // 카메라의 위치 가져오기
+                fireballPosition = cameraPosition; // Fireball 위치 저장
+                
+                // 모든 Enemy 오브젝트 찾기
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+                int enemyCount = 0;
+
+                // 캐릭터가 바라보는 방향
+                Vector3 forwardDirection = characterTransform.forward;
+
+                // flipX 상태 확인
+                bool isFlipped = characterTransform.localScale.x < 0; // flipX가 되어있는지 확인
+
+                // 범위 내의 적 찾기
+                foreach (GameObject enemy in enemies)
                 {
-                    // 적에게 데미지 주는 로직
-                    if (hitCollider.CompareTag("Enemy"))
+                    // 카메라 위치와 적의 거리 계산
+                    Vector3 directionToEnemy = enemy.transform.position - cameraPosition; // 적까지의 방향 벡터
+                    float distance = directionToEnemy.magnitude; // 거리 계산
+
+                    // 거리와 방향을 기준으로 양수와 음수로 판단
+                    float dotProduct = Vector3.Dot(forwardDirection, directionToEnemy.normalized);
+
+                    // flipX 상태에 따라 거리 인식 조정
+                    if (distance <= skill.effectRadius && dotProduct > 0) // 범위 내에 있고, 바라보는 방향에 있는 경우
                     {
-                        Debug.Log($"Dealing {skill.skillDamage} damage to {hitCollider.name}.");
-                        // 적에게 데미지 적용 로직 추가
+                        // flipX가 되어있으면 왼쪽 방향만 인식
+                        if (isFlipped && directionToEnemy.x < 0)
+                        {
+                            enemyCount++;
+                            if (enemy.TryGetComponent(out MeleeEnemy meleeEnemy))
+                            {
+                                meleeEnemy.TakeDamage(skill.skillDamage); // MeleeEnemy의 currentHealth 감소
+                            }
+                            else if (enemy.TryGetComponent(out RangedEnemy rangedEnemy))
+                            {
+                                rangedEnemy.TakeDamage(skill.skillDamage); // RangedEnemy의 currentHealth 감소
+                            }
+                        }
+                        // flipX가 안되어있으면 오른쪽 방향만 인식
+                        else if (!isFlipped && directionToEnemy.x > 0)
+                        {
+                            enemyCount++;
+                            if (enemy.TryGetComponent(out MeleeEnemy meleeEnemy))
+                            {
+                                meleeEnemy.TakeDamage(skill.skillDamage); // MeleeEnemy의 currentHealth 감소
+                            }
+                            else if (enemy.TryGetComponent(out RangedEnemy rangedEnemy))
+                            {
+                                rangedEnemy.TakeDamage(skill.skillDamage); // RangedEnemy의 currentHealth 감소
+                            }
+                        }
                     }
                 }
-                
+
+                Debug.Log($"Number of enemies hit by Fireball: {enemyCount}");
                 break;
 
             case "Lightning":
@@ -132,5 +178,13 @@ public class SkillManager : MonoBehaviour
             // 정수로 해석
             return int.Parse(effectValue);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // 기즈모 색상 설정
+        Gizmos.color = Color.blue;
+        // 기즈모로 effectRadius 범위 그리기
+        Gizmos.DrawWireSphere(fireballPosition, effectRadius); // Fireball 위치에 기즈모 그리기
     }
 }
