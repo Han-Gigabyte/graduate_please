@@ -99,34 +99,24 @@ public class PoolManager : MonoBehaviour
             return null;
         }
 
-        // 사용 가능한 오브젝트가 없으면 새로 생성 (풀 크기 자동 확장)
+        // 사용 가능한 오브젝트가 없으면 새로 생성
         if (poolDictionary[key].Count == 0)
         {
             GameObject newObj = CreateNewObject(key);
-            if (newObj == null)
-            {
-                Debug.LogError($"새로운 객체 생성 실패: {key}");
-                return null;
-            }
-            return newObj; // 새 객체 반환 (큐에 넣지 않고 바로 사용)
+            poolDictionary[key].Enqueue(newObj);
         }
 
         GameObject obj = poolDictionary[key].Dequeue();
-
-        // 객체가 null이면 새로 생성
-        while (obj == null && poolDictionary[key].Count > 0)
-        {
-            obj = poolDictionary[key].Dequeue();
-        }
-
+        
+        // 객체가 null인지 확인
         if (obj == null)
         {
-            Debug.LogError($"풀에서 가져온 모든 객체가 null입니다: {key}");
-            return CreateNewObject(key); // 최후의 수단으로 새 객체 생성
+            Debug.LogError($"풀에서 가져온 객체가 null입니다: {key}");
+            return null;
         }
 
         obj.SetActive(true);
-
+        
         // 비활성화될 때 자동으로 풀로 반환되도록 이벤트 추가
         var returnToPool = obj.GetComponent<ReturnToPool>();
         if (returnToPool == null)

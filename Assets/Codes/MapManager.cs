@@ -304,8 +304,6 @@ public class MapManager : MonoBehaviour
             {
                 Debug.LogError("Main camera not found!");
             }
-
-            Debug.Log($"Player spawn position: {playerSpawnPosition}");
         }
         else
         {

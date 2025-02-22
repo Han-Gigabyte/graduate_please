@@ -99,11 +99,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         //playerUI.GetComponent<PlayerUI>().SetPlayer(this); // PlayerUI에 플레이어를 설정
     }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject); // 씬 전환 시 플레이어 오브젝트가 파괴되지 않도록 설정
-    }
-
     void FixedUpdate()
     {
         CheckGround();

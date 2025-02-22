@@ -174,14 +174,14 @@ public class Store : MonoBehaviour
         itemEx.text = ItemListData.items[selectedItem[buttonId]].explaination;
     }
     public void buyItem(int buyButtonId){
-        if(InventoryManager.Instance.inventory.money < ItemListData.items[selectedItem[buyButtonId]].price){
+        if(InventoryManager.Instance.inventory.money<ItemListData.items[selectedItem[buyButtonId]].price){
             Debug.Log(InventoryManager.Instance.inventory.money);
             Debug.Log("돈없음");
         }
         else{
-            InventoryManager.Instance.RemoveItem(5, ItemListData.items[selectedItem[buyButtonId]].price);
-            buttonList[buyButtonId].interactable = false;
-            InventoryManager.Instance.AddItem(7, ItemListData.items[selectedItem[buyButtonId]].id);
+            InventoryManager.Instance.RemoveItem(5,ItemListData.items[selectedItem[buyButtonId]].price);
+            buttonList[buyButtonId].interactable =false;
+            InventoryManager.Instance.AddItem(7,ItemListData.items[selectedItem[buyButtonId]].id);
             nowMoney.text = "보유머니 : "+InventoryManager.Instance.inventory.money.ToString();
         }
     }

@@ -10,7 +10,7 @@ public class ItemList
     public int price;        // 아이템 가격
     public string explaination;  // 아이템 설명
     public Sprite ItemSprite; // 아이템 스프라이트 추가
-  
+
     // 생성자
     public ItemList(int id, string name, int price, string explaination)
     {
@@ -50,7 +50,7 @@ public class ItemListData
     {
         foreach (var item in items)
         {
-            // item.itemSprite = Resources.Load<Sprite>($"Sprites/{item.name}");
+            item.ItemSprite = Resources.Load<Sprite>($"Sprites/{item.name}");
         }
     }
 }

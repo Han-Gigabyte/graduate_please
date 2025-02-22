@@ -12,7 +12,7 @@ public class DroppedItem : MonoBehaviour
     {
         itemId = id;
         itemName = name;
-        Debug.Log($"Dropped Item Initialized: ID = {itemId}, Name = {itemName}, Quantity = {quantity}");
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
