@@ -61,7 +61,7 @@ MonoBehaviour:
   healthMultiplier: {fileID: 11400000, guid: cb1019c93ba0be943b490ba77429d6b4, type: 2}
   calculatedHealth: 0
   itemPrefab: {fileID: 0}
-  dashForce: 80
+  dashForce: 30
   dashCooltime: 3
   circularAttackEffectPrefab: {fileID: 3415900879390828816, guid: a4e1ed99dea1bf34683a954e88257162, type: 3}
   RaserEffectPrefab: {fileID: 5605060386581786699, guid: 2880d106368995d4ebb8f71197cbb1ab, type: 3}

@@ -43,6 +43,7 @@ public class LavaGaint : MonoBehaviour
     [Header("Attack")]
     public int dashForce = 30;
     public int dashCooltime = 3;
+    public int dashDemage= 30;
     
 
     void Start()
@@ -147,22 +148,9 @@ public class LavaGaint : MonoBehaviour
             {
                 Flip();
             }
-        
-        // 대시 쿨다운 체크
-        if (!canDash)
-        {
-            dashCooldownTimer -= Time.deltaTime;
-            if (dashCooldownTimer <= 0)
-            {
-                canDash = true;
-                Debug.Log("Dash is ready!");
-            }
+        if(isDashing){
+            rb.velocity = new Vector2(direction.x * dashForce, rb.velocity.y);
         }
-        // if(canDash&&Mathf.Abs(distanceToPlayer)>=3 ){ //일정 거리 이상 멀어지면 돌진 패턴
-        
-        //     Dash();
-        // }
-
         // 체력 체크
         if (calculatedHealth <= 0)
         {
@@ -181,11 +169,14 @@ public class LavaGaint : MonoBehaviour
     private float skillTimer = 0f;
     private float skillInterval = 10f;
     void mySkill(int skillNum){
-        skillNum = 2;
+        skillNum = Random.Range(0,3);
+        //캐스팅 시간
+        StartCoroutine(StopMovement(1f));
+        Debug.Log("스킬 캐스팅 시작 1초뒤 스킬사용");
         switch (skillNum)
     {
         case 0:
-            //Dash();
+            Dash();
             break;
         case 1:
             CircularAttack();
@@ -263,33 +254,27 @@ private IEnumerator StopMovement(float stopDuration)
     private bool canDash = true;
     private float dashCooldownTimer = 0f;
     private bool isDashing = false;
-    private float dashCooldown=2f;
     private void Dash(){
         
         float dashDirection = direction.x>=0 ? 1f : -1f;
         // 현재 속도를 초기화하고 대시 방향으로 힘을 가함
         // 대시 속도 설정
         // 대시 속도 직접 설정
-        rb.velocity = new Vector2(dashDirection * dashForce, rb.velocity.y);
-        
-
         // 대시 코루틴 시작
-        //StartCoroutine(DashCoroutine());
-
+        StartCoroutine(DashCoroutine());
         // 쿨다운 시작
         canDash = false;
-        dashCooldownTimer = dashCooldown;
         Debug.Log($"보스몬스터 대쉬사용");
     }
 
     private IEnumerator DashCoroutine()
     {
         isDashing = true;
-        
+        int tmp = baseDamage;
+        baseDamage = dashDemage;
         // 대시 지속 시간
-        yield return new WaitForSeconds(0.35f);
-        rb.velocity = Vector2.zero;
-        
+        yield return new WaitForSeconds(0.3f);
+        baseDamage = tmp;
         isDashing = false;
     }
     
