@@ -5,21 +5,52 @@ using UnityEngine;
 public class CircularAttackEffect : MonoBehaviour
 {
     public float radius = 3f; // 공격 범위
-    public Color attackColor = Color.red; // 공격 범위 색상
-    public float duration = 0.5f; // 이펙트 지속 시간
-
-    private SpriteRenderer spriteRenderer;
-
+    // Start is called before the first frame update
+    public int attackDamage=10;
+    private float nextDamageTime;
+    public float knockbackForce=3f;
+    public float damageCooldown = 0.1f;
     void Start()
-    {
-        // // SpriteRenderer 컴포넌트 추가
-        // spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-        // //spriteRenderer.sprite = Resources.Load<Sprite>("CircleSprite"); // 원형 스프라이트 로드
-        // spriteRenderer.color = attackColor;
-        // spriteRenderer.drawMode = SpriteDrawMode.Sliced;
-        // spriteRenderer.size = new Vector2(radius * 2, radius * 2); // 크기 설정
+{
+    nextDamageTime = Time.time;
 
-        // 이펙트 지속 시간 후 제거
-        Destroy(gameObject, duration);
+    // CircleCollider2D 가져오기 또는 추가
+    CircleCollider2D collider = GetComponent<CircleCollider2D>();
+    if (collider == null)
+    {
+        collider = gameObject.AddComponent<CircleCollider2D>();
     }
+
+    // 스프라이트 크기 조절
+    SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+    if (spriteRenderer != null)
+    {
+        float baseSize = spriteRenderer.sprite.bounds.size.x; // 기본 스프라이트 크기
+        float scaleFactor = (radius * 2) / baseSize; // 반지름 기반 스케일 조정
+        transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+    }
+
+    // ⚡ 콜라이더 크기를 스프라이트 크기에 맞춤
+    collider.radius = radius / transform.lossyScale.x;
+}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (Time.time >= nextDamageTime)
+            {
+                IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    Vector2 knockbackDir = (collision.transform.position - transform.position).normalized;
+                    knockbackDir.y = 0.5f;
+                    
+                    damageable.TakeDamage(attackDamage, knockbackDir, knockbackForce);
+                    nextDamageTime = Time.time + damageCooldown;
+                }
+            }
+        }
+    }
+
 }

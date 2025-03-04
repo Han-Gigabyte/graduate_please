@@ -169,7 +169,8 @@ public class LavaGaint : MonoBehaviour
     private float skillTimer = 0f;
     private float skillInterval = 10f;
     void mySkill(int skillNum){
-        skillNum = Random.Range(0,3);
+        //skillNum = Random.Range(0,3);
+        skillNum=1;
         //캐스팅 시간
         StartCoroutine(StopMovement(1f));
         Debug.Log("스킬 캐스팅 시작 1초뒤 스킬사용");
@@ -198,21 +199,9 @@ private void CircularAttack()
     // 이펙트 생성
     if (circularAttackEffectPrefab != null)
     {
-        GameObject effect = Instantiate(circularAttackEffectPrefab, transform.position+new Vector3(0f,direction.x*4,0f), Quaternion.identity);
+        GameObject effect = Instantiate(circularAttackEffectPrefab, transform.position, Quaternion.identity);
         Destroy(effect, 0.5f); // 0.5초 후 이펙트 제거
         Debug.Log("이펙트 출력");
-    }
-
-    // 주변 플레이어에게 데미지 적용
-    Collider2D[] hitPlayers = Physics2D.OverlapCircleAll(transform.position, 3f, LayerMask.GetMask("Player"));
-    foreach (var player in hitPlayers)
-    {
-        IDamageable damageable = player.GetComponent<IDamageable>();
-        if (damageable != null)
-        {
-            Vector2 knockbackDir = (player.transform.position - transform.position).normalized;
-            damageable.TakeDamage(attackDamage, knockbackDir, knockbackForce);
-        }
     }
     Debug.Log("원형 공격 사용");
 }
