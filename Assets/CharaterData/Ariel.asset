@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: "\uC5D0\uB9AC\uC5BC"
   characterSprite: {fileID: -936303169, guid: aeab5ce1056564ed88ad496cdf7c9adc, type: 3}
-  level: 1
+  level: 2
   description: "\uC124\uBA85"
   vitality: 0
-  power: 0
+  power: 1
   agility: 0
   luck: 0
+  isUnlocked: 1
+  requiredScrews: 1
+  requiredPages: 1

@@ -39,37 +39,55 @@ public class InventoryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
     }
 
+    private void Start()
+    {
+        if (inventory != null)
+        {
+            LoadInventory(); // 저장된 데이터 불러오기
+        }
+        else
+        {
+            inventory = new PlayerItemData(); // 데이터가 없으면 새로운 인벤토리 생성
+        }
+    }
+
 
     // 아이템 추가
     public void AddItem(int id, int quantity)
     {
         switch(id){
             case 0: //돌
-            inventory.stone+=quantity;
+            inventory.stone += quantity;
             break;
             case 1: //나무 
-            inventory.tree+=quantity;
+            inventory.tree += quantity;
             break;
             case 2: // 가죽 
-            inventory.skin+=quantity;
+            inventory.skin += quantity;
             break;
             case 3: // 철
-            inventory.steel+=quantity;
+            inventory.steel += quantity;
             break;
             case 4: //금
-            inventory.gold+=quantity;
+            inventory.gold += quantity;
             break; 
             case 5: //돈
-            inventory.money+=quantity;
+            inventory.money += quantity;
             break;
             case 6: //배터리
-            inventory.battery+=quantity;
+            inventory.battery += quantity;
             break;
-            case 7: //새로운 아이템추가, 이경우 quaitiy가 아이템의 아이디
+            case 7: //기계 조각
+            inventory.screw += quantity;
+            break;
+            case 8: //캐릭터 페이지(찢어진 동화책)
+            inventory.page += quantity;
+            break;
+            case 9: //새로운 아이템추가, 이경우 quaitiy가 아이템의 아이디
             inventory.items.Add(quantity);
             break;
         }
-    
+
         Debug.Log($"Added {quantity} {name} to inventory.");
     }
 
@@ -98,12 +116,20 @@ public void RemoveItem(int id, int quantity)
             case 6: //배터리
             inventory.battery-=quantity;
             break;
+            case 7: //기계 조각
+            inventory.screw-=quantity;
+            break;
+            case 8: //캐릭터 페이지
+            inventory.page-=quantity;
+            break;
         }
     }
+
+    
     public void SaveInventory(){
         SaveManager.Instance.SaveData(inventory);
     }
-    public void loadInventory(){
+    public void LoadInventory(){
         inventory = SaveManager.Instance.LoadData();
     }
 }

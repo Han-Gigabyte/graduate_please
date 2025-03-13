@@ -13,5 +13,8 @@ public class CharacterData : ScriptableObject
     public int power;             // 파워
     public int agility;           // 민첩
     public int luck;              // 행운
+    public bool isUnlocked;       // 해금 여부
+    public int requiredScrews = 1;// 해금 조건 - screw 개수
+    public int requiredPages = 1; // 해금 조건 - page 개수
 }
 

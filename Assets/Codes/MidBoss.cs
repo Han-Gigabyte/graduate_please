@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class RangedEnemy : MonoBehaviour
+public class MidBoss : MonoBehaviour
 {
     [Header("Movement")]
     private float moveSpeed;
@@ -8,25 +9,46 @@ public class RangedEnemy : MonoBehaviour
     private float detectionRange;
 
     [Header("Damage")]
-
-    public int baseDamage = 10; // 기본 공격력
+    public int baseDamage = 20; // 기본 공격력
     public DamageMultiplier damageMultiplier; // 공격력 비율을 위한 ScriptableObject
     public int attackDamage; // 공격력
     private float projectileSpeed; // 발사체 속도
+    private float damageCooldown;
     private float attackCooldown;
+    private float knockbackForce;
     protected string projectileKey = "EnemyProjectile";
     protected Transform firePoint;
+    
 
     [Header("Health")]
     public float baseHealth = 80f; // 기본 체력
     public HealthMultiplier healthMultiplier; // 체력 비율을 위한 ScriptableObject
     public float calculatedHealth; // 계산된 체력
 
-    [Header("Item Drop")]
-    [SerializeField] private GameObject itemPrefab; // 아이템 프리팹
-    private InventoryManager inventoryManager;
+    [Header("Skill Fireball")]
+    public GameObject fireballPrefab; // 파이어볼 프리팹
+    public int fireballBaseDamage = 30;  // 기본 데미지
+    public float fireballProjectileSpeed = 10f; // 발사 속도
+    public float fireballCooldown = 10f; // 스킬 쿨타임
+    
+    private bool canUseFireball = false;   // 스킬 사용 가능 여부
+
+    [Header("Skill Shockwave")]
+    public GameObject shockwavePrefab;  // 충격파 프리팹
+    public Transform shockwaveSpawnPoint;  // 충격파 생성 위치
+    public float shockwaveCooldown = 5f;  // 스킬 쿨타임
+
+    private bool canUseShockwave = false;
+
+    [Header("Skill Throw")]
+    public GameObject throwObjectPrefab;
+    public Transform throwPoint;
+    public float throwCooldown = 5f; // 스킬 사용 간격
+
+    private bool canUseThrow = false;
 
 
+    private float nextDamageTime;
     private float nextAttackTime;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -41,6 +63,7 @@ public class RangedEnemy : MonoBehaviour
         detectionRange = GameManager.Instance.rangedEnemyDetectionRange;
         attackCooldown = GameManager.Instance.rangedEnemyAttackCooldown;
         projectileSpeed = GameManager.Instance.rangedEnemyProjectileSpeed;
+        damageCooldown = GameManager.Instance.meleeEnemyDamageCooldown;
 
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -95,6 +118,8 @@ public class RangedEnemy : MonoBehaviour
         firePoint = firePointObj.transform;
         firePoint.SetParent(transform);
         firePoint.localPosition = new Vector3(0f, 0f, 0f); // 발사 위치 고정
+
+        StartCoroutine(EnableSkillAfterDelay(5f));  // 5초 후 처음 사용 가능
     }
 
     // 새로 스폰되는 Enemy들과도 충돌을 무시하기 위한 트리거 체크
@@ -106,13 +131,20 @@ public class RangedEnemy : MonoBehaviour
         }
     }
 
+    private IEnumerator EnableSkillAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canUseFireball = true;
+        canUseShockwave = true;
+        canUseThrow = true;
+    }
+
     void Update()
     {
         // 플레이어가 죽었거나 없으면 더 이상 진행하지 않음
         if (PlayerController.IsDead || playerTransform == null)
         {
             StopMoving();
-            CheckDeath();
             return;
         }
 
@@ -145,41 +177,100 @@ public class RangedEnemy : MonoBehaviour
             StopMoving();
             isPlayerInRange = false;
         }
-    }
-
-    // 체력 0이 되면 아이템 드롭 및 몬스터 파괴 처리
-    private void CheckDeath()
-    {
-        if (calculatedHealth <= 0)
+        /*
+        if (canUseFireball)
         {
-            DropItem();
-            Destroy(gameObject);
+            StartCoroutine(UseFireball());
+            canUseFireball = false;
+            Invoke(nameof(ResetSkillFireballCooldown), fireballCooldown);
         }
-    }
+        */
 
-    void DropItem()
-    {
-        string itemName = inventoryManager.GetItemNameById(0);
-        if (inventoryManager == null) return;
-
-        // 랜덤 ID 생성 (0~4 중 하나)
-        int randomId = Random.Range(0, 5);
-
-        // 드랍 위치
-        Vector3 dropPosition = transform.position;
-
-        // 아이템 생성
-        GameObject droppedItem = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
-
-        // 아이템 초기화
-        DroppedItem itemComponent = droppedItem.GetComponent<DroppedItem>();
-        if (itemComponent != null)
+        /*
+        if (canUseShockwave)
         {
-            itemName = inventoryManager.GetItemNameById(randomId); // ID에 따른 이름
-            itemComponent.Initialize(randomId, itemName);
+            StartCoroutine(UseShockwave());
+            canUseShockwave = false;
+            Invoke(nameof(ResetSkillShockwaveCooldown), shockwaveCooldown);
+        }
+        */
+
+        if (canUseThrow)
+        {
+            StartCoroutine(UseThrow());
+            canUseThrow = false;
+            Invoke(nameof(ResetSkillThrowCooldown), throwCooldown);
         }
 
-        Debug.Log($"Dropped {itemName} at {dropPosition}");
+    }
+
+    private IEnumerator UseFireball()
+    {
+        Debug.Log("MidBoss가 파이어볼 스킬을 준비 중...");
+
+        // 애니메이션 실행 (선택 사항)
+        //GetComponent<Animator>().SetTrigger("UseSkill");
+
+        yield return new WaitForSeconds(0.5f); // 애니메이션 대기
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null) yield break; // 플레이어가 없으면 스킬 취소
+
+        Vector2 targetPosition = player.transform.position; // 플레이어 위치 가져오기
+
+        // 파이어볼 생성
+        GameObject fireball = Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
+        fireball.GetComponent<Fireball>().SetFireball(fireballBaseDamage, projectileSpeed, targetPosition);
+
+        Debug.Log("MidBoss가 파이어볼 발사!");
+    }
+
+    private IEnumerator UseShockwave()
+    {
+        Debug.Log("MidBoss가 충격파를 준비 중...");
+        // 보스가 충격파 준비 모션
+        //GetComponent<Animator>().SetTrigger("UseSkill");
+
+        yield return new WaitForSeconds(1f);
+
+        // 충격파 생성
+        Instantiate(shockwavePrefab, shockwaveSpawnPoint.position, Quaternion.identity);
+        Debug.Log("MidBoss가 충격파 사용!");
+
+        yield return new WaitForSeconds(shockwaveCooldown); // 쿨타임 적용
+    }
+
+    private IEnumerator UseThrow()
+    {
+        Debug.Log("MidBoss가 투척 스킬 준비 중...");
+
+        // 플레이어 위치 찾기
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        { 
+            // 플레이어 위치 계산 후 던지기
+            Vector2 targetPosition = playerTransform.position + Vector3.down * 0.5f; // 목표 지점 (땅과 근접)
+            GameObject throws = Instantiate(throwObjectPrefab, firePoint.position, Quaternion.identity);
+            throws.GetComponent<Throw>().setThrow(targetPosition);
+        }
+
+        Debug.Log("MidBoss가 투척 스킬 사용!");
+        yield return new WaitForSeconds(throwCooldown);
+    }
+
+    private void ResetSkillFireballCooldown()
+    {
+        canUseFireball = true;
+    }
+
+    private void ResetSkillShockwaveCooldown()
+    {
+        canUseShockwave = true;
+    }
+
+    private void ResetSkillThrowCooldown()
+    {
+        canUseThrow = true;
     }
 
     // virtual로 변경하여 오버라이드 가능하게 함
@@ -189,7 +280,7 @@ public class RangedEnemy : MonoBehaviour
         if (PlayerController.IsDead) return;
 
         GameObject projectile = PoolManager.Instance.GetObject(projectileKey);
-        
+
         // null 체크 추가
         if (projectile == null)
         {
@@ -237,6 +328,25 @@ public class RangedEnemy : MonoBehaviour
         // 감지 범위 표시 (노란색)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (Time.time >= nextDamageTime)
+            {
+                IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    Vector2 knockbackDir = (collision.transform.position - transform.position).normalized;
+                    knockbackDir.y = 0.5f;
+
+                    damageable.TakeDamage(attackDamage, knockbackDir, knockbackForce);
+                    nextDamageTime = Time.time + damageCooldown;
+                }
+            }
+        }
     }
 
     // 현재 플레이어가 공격 범위 안에 있는지 확인하는 프로퍼티

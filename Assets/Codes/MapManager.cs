@@ -171,6 +171,12 @@ public class MapManager : MonoBehaviour
         {
             SpawnManager.Instance.SpawnEntities();
         }
+
+        // 중간보스 소황
+        if (Time.timeSinceLevelLoad == 9)  // 게임 시작 직후가 아닐 때만
+        {
+            MidBossSpawnManager.Instance.SpawnEntities();
+        }
     }
 
     private void SpawnGround(Vector3Int offset, int width)
@@ -325,6 +331,14 @@ public class MapManager : MonoBehaviour
 
         // SpawnManager를 통해 적 소환
         SpawnManager.Instance.SpawnEntities();
+        /*
+        //테스트용
+        MidBossSpawnManager.Instance.SpawnEntities();
+
+        if (GameManager.Instance.Stage == 9) {
+            MidBossSpawnManager.Instance.SpawnEntities();
+        }
+        */
     }
 
     public void DestroyAllEnemies()

@@ -20,3 +20,6 @@ MonoBehaviour:
   power: 0
   agility: 0
   luck: 0
+  isUnlocked: 0
+  requiredScrews: 1
+  requiredPages: 1

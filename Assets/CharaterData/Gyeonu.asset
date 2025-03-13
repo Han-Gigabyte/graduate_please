@@ -17,6 +17,9 @@ MonoBehaviour:
   level: 1
   description: "\uC124\uBA85"
   vitality: 0
-  power: 0
+  power: 1
   agility: 0
   luck: 0
+  isUnlocked: 1
+  requiredScrews: 1
+  requiredPages: 1
